@@ -30,7 +30,7 @@
         <div class="content">
             <header>
                 <h1>Map.prototype.upsert Tutorial</h1>
-                <p>Welcome to this detailed tutorial on how to implement and understand the Map.prototype.upsert proposal in JavaScript™.</p>
+                <p>Welcome to this detailed tutorial on how to implement and understand the <code>Map.prototype.upsert</code> proposal in JavaScript™.</p>
             </header>
 
             <main>
@@ -99,6 +99,22 @@
                 <section id="ecmarkup">
                     <h2>Writing the Specification in Ecmarkup</h2>
                     <p>[Guide for writing in Ecmarkup goes here]</p>
+                    <div class="tab-container">
+                        <div class="tabs">
+                            <button class="tab-button active" data-tab="ecmarkup-windows-tab">Windows</button>
+                            <button class="tab-button" data-tab="ecmarkup-mac-tab">Mac</button>
+                            <button class="tab-button" data-tab="ecmarkup-linux-tab">Linux</button>
+                        </div>
+                        <div class="tab-content active" id="ecmarkup-windows-tab">
+                            <p>NPM windows.</p>
+                        </div>
+                        <div class="tab-content" id="ecmarkup-mac-tab">
+                            <p>NPM mac</p>
+                        </div>
+                        <div class="tab-content" id="ecmarkup-linux-tab">
+                            <p>NPM linux</p>
+                        </div>
+                    </div>
                 </section>
             </main>
 
@@ -107,5 +123,37 @@
             </footer>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Select all tab buttons and contents
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            // Function to show the selected tab
+            function openTab(tabId) {
+                // Hide all tab content
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                // Remove 'active' class from all buttons
+                tabButtons.forEach(button => button.classList.remove('active'));
+
+                // Show the clicked tab's content and activate the button
+                document.getElementById(tabId).classList.add('active');
+                document.querySelector(`.tab-button[data-tab="${tabId}"]`).classList.add('active');
+            }
+
+            // Attach event listeners to all tab buttons
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    openTab(tabId);
+                });
+            });
+
+            // Initialize by showing the first tab by default
+            openTab(tabButtons[0].getAttribute('data-tab'));
+        });
+
+    </script>
 </body>
 </html>
