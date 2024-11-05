@@ -109,6 +109,8 @@ footer {
     cursor: pointer;
     border: none;
     border-right: 1px solid #ccc;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     outline: none;
     transition: background 0.3s;
 }
