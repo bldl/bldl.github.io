@@ -331,7 +331,589 @@ To take your build for a test drive, run: |mach run|
                 <section class="collapsible" id="implementation">
                     <h2>Implementation</h2>
                     <div class="content-body">
-                        <p>[Implementation guide goes here]</p>
+                        <p>In this section, we’ll walk through the process of implementing the <code>Map.prototype.upsert</code> method step-by-step. We will examine each line of the specification in detail and you will gain a deep understanding of the implementation process. By the end, you’ll have a fully functional <code>upsert</code> method in JavaScript™, along with insight in where to find resources and information which gives you a strong foundation to implement additional functions on your own in the future.</p>
+                        <h3 id="creating-a-function">Creating a function</h3>
+                        <p>  The first step to implementing a function in SpiderMonkey is to create a <em>hook</em> in C++. This hook serves as the connection between SpiderMonkey’s C++ core and our self-hosted JavaScript™ code.</p>
+                        <p>  The JavaScript™ type <code>Map</code> is defined in C++ as <code>MapObject</code>. All <code>Map</code> methods, like <code>Map::set</code> and <code>Map::get</code>, are defined
+                            in the array <code>MapObject::methods[]</code>. To add <code>upsert</code> we need to define a hook in this array.</p>
+                        <p>  <strong>Create a hook in <code>MapObject.cpp</code>:</strong></p>
+                        <pre><code class="language-cpp">
+  JS_SELF_HOSTED_FN(&quot;upsert&quot;, &quot;MapUpsert&quot;, 2,0),
+</code></pre>
+                        <p>  This line sets up the hook with the following details:</p>
+                        <ul>
+                            <li><strong>JS_SELF_HOSTED_FN:</strong> Indicates the function is implemented in self-hosted JavaScript™ (meaning the main logic is in JavaScript™ rather than C++).</li>
+                            <li><strong>First argument:</strong> <code>upsert</code> — the function name as it will appear in JavaScript™.</li>
+                            <li><strong>Second argument:</strong> <code>MapUpsert</code> — the name of the JavaScript™ implementation (which we’ll define shortly)</li>
+                            <li><strong>Third argument:</strong> <code>2</code> Number of arguments.</li>
+                            <li><strong>Fourth argument:</strong> <code>0</code> Number of flags.</li>
+                        </ul>
+                        <p>  <strong>Copy the line above and paste it into <code>MapObject.cpp</code> under <code>MapObject::Methods</code></strong></p>
+                        <p>  With the C++ hook in place, we can define the actual function in JavaScript™. Open <code>Map.js</code>, and add the following code:</p>
+                        <pre><code class="language-js">function MapUpsert(key, handler) {
+  return 42
+}
+</code></pre>
+                        <p>  This is a simple placeholder function. It doesn’t perform any <code>upsert</code> logic yet; it just returns the number 42. This step allows us to check that our function is correctly hooked up and accessible in the JavaScript™ runtime.</p>
+                        <p>  To confirm everything is connected, build the project and run the JavaScript™ shell:</p>
+                        <pre><code class="language-sh">./mach build
+...
+./mach run
+</code></pre>
+                        <p>  Once the shell opens, you can test your upsert function:</p>
+                        <pre><code class="language-sh">js&gt; const m = new Map()
+js&gt; m.upsert(0,0)
+42
+</code></pre>
+                        <p>  If you see 42 as the output, then you’ve successfully created a function hook and defined an initial JavaScript™ implementation. This means we’re ready to move forward with implementing the actual <code>upsert</code> functionality.</p>
+                        <h3 id="step-1---implement-the-first-line">Step 1 - Implement The First Line</h3>
+                        <p>  Now that we have our <code>upsert</code> method hooked up and accessible in the JavaScript™ runtime, it’s time to start implementing the logic as specified in the ECMAScript® proposal.</p>
+                        <p>  <strong>Setting Up <code>this</code> in the Function:</strong>
+                            Some lines in the specification are more intuitive than others. The first line of the specification instructs us to capture the current <code>this</code> context, which is the <code>MapObject</code> instance on which <code>upsert</code> was called. This is a foundational step in almost any method, as it ensures we’re working with the correct object.</p>
+                        <p>  <strong>Specification Line:</strong></p>
+                        <pre><code class="language-lua">1. Let M be the this value.
+</code></pre>
+                        <p>  In the code, we can implement this line simply by assigning this to a variable called <code>M</code>. This will allow us to refer to the <code>Map</code> instance consistently throughout the function: </p>
+                        <pre><code class="language-js">function MapUpsert(key, handler) {
+  var M = this;
+}
+</code></pre>
+                        <p>  We have now captured the <code>this</code> object, which should be an instance of a <code>MapObject</code> and we can now start to manipulate this object in the upcoming steps.</p>
+                        <h3 id="step-2---verify-the-object-type">Step 2 - Verify The Object Type</h3>
+                        <p>  With the <code>this</code> context now captured in <code>M</code>, our next step is to validate that <code>M</code> is actually a <code>MapObject</code>. This is crucial because JavaScript™ objects can sometimes be altered or misused, and we need to ensure that <code>upsert</code> is being called on a valid instance of <code>Map</code>. This verification process will prevent errors and misuse, keeping the method consistent with the ECMAScript® specification.</p>
+                        <p>  <strong>Verifying the Map’s Internal Structure</strong><br>  The ECMAScript® specification uses internal slots to define hidden properties within objects. In this step, we’re asked to confirm that the object <code>M</code> has the <code>[[MapData]]</code> internal slot, which holds the actual <code>key-value</code> data for the <code>Map</code>. By checking for this internal slot, we can be confident that <code>M</code> is indeed a <code>Map</code> and not some other type of object.</p>
+                        <p>  <strong>Specification Line:</strong></p>
+                        <pre><code class="language-lua">2. Perform ? RequireInternalSlot(M, [[MapData]]).
+</code></pre>
+                        <p>   This step is common for most self-hosted <code>MapObject</code> methods. The solution for this step already exists in the code. Look at <code>MapForEach</code> as an example.</p>
+                        <details>
+                            <summary>Solution</summary>
+
+                            <pre><code class="language-js">function MapUpsert(key, handler) {
+  var M = this;
+
+  if (!IsObject(M) || (M = GuardToMapObject(M)) === null) {
+    return callFunction(
+      CallMapMethodIfWrapped,
+      this,
+      key,
+      handler,
+      &quot;MapUpsert&quot;
+    );
+  }
+}
+</code></pre>
+                        </details>
+
+
+                        <h3 id="step-3---self-hosted-javascript™-vs-javascript™">Step 3 - Self-Hosted JavaScript™ vs. JavaScript™</h3>
+                        <p>  Before proceeding further in the tutorial, it’s imperative to improve our understanding of self-hosted JavaScript™. </p>
+                        <p>  All self-hosted JavaScript™ operates in <strong>strict mode,</strong> preventing functions from running in the global scope if invoked with a <code>null</code> or <code>undefined</code> scope. To make self-hosted JavaScript™ safe,
+                            we have to follow some rules. A potentially critical problem when writing self-hosted code is <strong>monkey patching.</strong> This phenomenon occurs when our implementation makes a function call to an external function
+                            which has been overwritten by user scripts. This problem can be mitigated by using <strong>function invocation.</strong> Use <code>callFunction</code> and <code>callContentFunction</code> to call function within the specific object scope.
+                            Furthermore, self-hosted code also has limited access to the C++ builtins. Only a select set, defined in <code>Selfhosting.cpp</code> is accessible. </p>
+                        <p>  <strong>What functions can be used in self-hosted JavaScript™?</strong></p>
+                        <ul>
+                            <li>Other self-hosted functions (remember &#39;almost&#39; everything is an <code>Object</code>).</li>
+                            <li>Functions made accessible in <code>SelfHosting.cpp</code>.</li>
+                            <li>Some abstract operations and additional utility functions.</li>
+                        </ul>
+                        <p>  Read more about self-hosted code <a href="https://udn.realityripple.com/docs/Mozilla/Projects/SpiderMonkey/Internals/self-hosting" target="_blank">here.</a></p>
+                        <p>  <strong>The snippet below is from <code>SelfHosting.cpp</code> and displays the available <code>MapObject</code> builtins:</strong></p>
+                        <pre><code class="language-cpp">
+// Standard builtins used by self-hosting.
+// Code snippet from SelfHosting.cpp
+...
+  JS_FN(&quot;std_Map_entries&quot;, MapObject::entries, 0, 0),
+  JS_FN(&quot;std_Map_get&quot;, MapObject::get, 1, 0),
+  JS_FN(&quot;std_Map_set&quot;, MapObject::set, 2, 0),
+...
+</code></pre>
+                        <p>  <strong>Moving on with the implementation:</strong>
+                            We have stored the <code>this</code> object and verified that is in fact an instance of <code>MapObject</code>. In the coming steps, the contents of this object will be manipulated. The next step tells us to store the contents of the <code>Map</code> as a <code>List</code>.</p>
+                        <p>  <strong>Specification Line:</strong></p>
+                        <pre><code class="language-lua">3. Let entries be the List that is M.[[MapData]].
+</code></pre>
+                        <p>  Use <code>callFunction</code> and the standard built-in <code>std_Map_entries</code> to retrieve a list of all <code>key-value</code> entries in the <code>Map</code>. Store it as a variable named <code>entries</code>.</p>
+                        <details>
+                            <summary>Solution</summary>
+
+                            <pre><code class="language-js">function MapUpsert(key, handler) {
+  var M = this;
+
+  if (!IsObject(M) || (M = GuardToMapObject(M)) === null) {
+    return callFunction(
+      CallMapMethodIfWrapped,
+      this,
+      key,
+      handler,
+      &quot;MapUpsert&quot;
+    );
+  }
+
+  var entries = callFunction(std_Map_entries, M);
+}
+</code></pre>
+                        </details>
+
+                        <h3 id="step-4---iterating-through-the-map-entries">Step 4 - Iterating through the map entries</h3>
+                        <p>  Now that we’ve set up our initial structure and verified our <code>MapObject</code>, the next step is to iterate through the entries within the <code>Map</code>. This allows us to examine each <code>key</code>-<code>value</code> pair to determine
+                            if the specified <code>key</code> already exists, which will help us decide whether to update an existing <code>value</code> or <code>insert</code> a new one. To achieve this we first have to set up an iteration of the <code>entries</code> list.</p>
+                        <p>  <strong>Specification Line:</strong></p>
+                        <pre><code>4. For each Record { [[Key]], [[Value]] } e that is an element of entries, do
+</code></pre>
+                        <p>  Different methods of iteration is used in the other self-hosted <code>Map</code> methods. The specification states that we should use a <code>for-of loop</code>. Look at existing methods and create the for-loop.  </p>
+                        <details>
+                            <summary>Solution</summary>
+
+                            <pre><code class="language-js">function MapUpsert(key, handler) {
+  var M = this;
+
+  if (!IsObject(M) || (M = GuardToMapObject(M)) === null) {
+    return callFunction(
+      CallMapMethodIfWrapped,
+      this,
+      key,
+      handler,
+      &quot;MapUpsert&quot;
+    );
+  }
+
+  var entries = callFunction(std_Map_entries, M);
+
+  for (var e of allowContentIter(entries)) {
+    var eKey = e[0];
+    var eValue = e[1];
+    //...
+  }
+}
+</code></pre>
+                        </details>
+
+                        <p>  <strong>Check if <code>key</code> already exists</strong></p>
+                        <p>  As mentioned above, the purpose of the iteration is to check whether the key already exists. This can be done by comparing the <code>key</code> with <code>eKey</code>.</p>
+                        <p>  <strong>Specification Line:</strong></p>
+                        <pre><code class="language-lua">4a. If e.[[Key]] is not empty and SameValueZero(e.[[Key]], key) is true, then
+</code></pre>
+                        <p>  The <code>SameValueZero</code> function helps us check for equality between the <code>key</code> provided to <code>MapUpsert</code> and the <code>key</code> in the current entry. This comparison ensures that we handle only the correct <code>key</code>-<code>value</code> pair.</p>
+                        <details>
+                            <summary>Solution</summary>
+
+                            <pre><code class="language-js">function MapUpsert(key, handler) {
+  var M = this;
+
+  if (!IsObject(M) || (M = GuardToMapObject(M)) === null) {
+    return callFunction(
+      CallMapMethodIfWrapped,
+      this,
+      key,
+      handler,
+      &quot;MapUpsert&quot;
+    );
+  }
+
+  var entries = callFunction(std_Map_entries, M);
+
+  for (var e of allowContentIter(entries)) {
+    var eKey = e[0];
+    var eValue = e[1];
+
+    if (SameValueZero(key, eKey)) {
+      //...
+    }
+  }
+}
+</code></pre>
+                        </details>
+
+                        <p>   If the <code>SameValueZero</code> operation returns <code>true</code> on an entry, the <code>key</code> exists in the <code>Map</code>. By logic of the specification, we cannot insert on an existing <code>key</code>-<code>value</code> pair, but we can <code>update</code> it this function exists in the <code>handler</code>.</p>
+                        <p>  <strong>Check for the <code>update</code> handler</strong></p>
+                        <p>  With the <code>key</code> identified in the <code>Map</code>, the next step is to determine if the <code>handler</code> object includes an <code>update</code> function. This will allow us to <code>update</code> the <code>value</code> associated with the existing <code>key</code> in the <code>Map</code>.</p>
+                        <p>  <strong>Specification Line:</strong></p>
+                        <pre><code class="language-lua">4ai. If HasProperty(handler, &quot;update&quot;) is `true`, then
+</code></pre>
+                        <p>  In self-hosted JavaScript™, most objects are treated similarly to regular JavaScript™ objects, so we can use standard object methods for these checks. For example, <code>hasOwnProperty</code> can verify if <code>update</code> is a property of <code>handler</code>. </p>
+                        <p>  Here’s a snippet from the <code>Object.cpp</code> file displaying some self-hosted functions:</p>
+                        <pre><code class="language-cpp">// Code snippet from Object.cpp
+static const JSFunctionSpec object_methods[] = {
+    //...
+    JS_SELF_HOSTED_FN(&quot;toLocaleString&quot;, &quot;Object_toLocaleString&quot;, 0, 0),
+    JS_SELF_HOSTED_FN(&quot;valueOf&quot;, &quot;Object_valueOf&quot;, 0, 0),
+    JS_SELF_HOSTED_FN(&quot;hasOwnProperty&quot;, &quot;Object_hasOwnProperty&quot;, 1, 0),
+    //...
+    JS_FS_END,
+};
+</code></pre>
+                        <p>  Using <code>hasOwnProperty</code> on <code>handler</code>, we can now verify if the <code>update</code> property is defined. This step ensures that we only proceed if <code>handler</code> actually provides an <code>update</code> function.</p>
+                        <details>
+                            <summary>Solution</summary>
+
+                            <pre><code class="language-js">function MapUpsert(key, handler) {
+  var M = this;
+
+  if (!IsObject(M) || (M = GuardToMapObject(M)) === null) {
+    return callFunction(
+      CallMapMethodIfWrapped,
+      this,
+      key,
+      handler,
+      &quot;MapUpsert&quot;
+    );
+  }
+
+  var entries = callFunction(std_Map_entries, M);
+
+  for (var e of allowContentIter(entries)) {
+    var eKey = e[0];
+    var eValue = e[1];
+
+    if (SameValueZero(key, eKey)) {
+      if (callFunction(Object_hasOwnProperty, handler, &#39;update&#39;)) {
+        //...
+      }
+    }
+  }
+}
+</code></pre>
+                        </details>
+
+                        <p>  <strong>Get the <code>update</code> function from the <code>handler</code></strong></p>
+                        <p>  If the <code>key</code> exists and <code>update</code> is specified, the next step is to retrieve the <code>update</code> function.</p>
+                        <p>  <strong>Specification Line:</strong></p>
+                        <pre><code class="language-lua">4ai1. Let updateFn be ? Get(handler, &quot;update&quot;).
+</code></pre>
+                        <p>  Store the <code>update</code> function as a variable <code>updateFn</code>.</p>
+                        <details>
+                            <summary>Solution</summary>
+
+                            <pre><code class="language-js">function MapUpsert(key, handler) {
+  var M = this;
+
+  if (!IsObject(M) || (M = GuardToMapObject(M)) === null) {
+    return callFunction(
+      CallMapMethodIfWrapped,
+      this,
+      key,
+      handler,
+      &quot;MapUpsert&quot;
+    );
+  }
+
+  var entries = callFunction(std_Map_entries, M);
+
+  for (var e of allowContentIter(entries)) {
+    var eKey = e[0];
+    var eValue = e[1];
+
+    if (SameValueZero(key, eKey)) {
+      if (callFunction(Object_hasOwnProperty, handler, &#39;update&#39;)) {
+        var updateFN = handler[&#39;update&#39;];
+        //...
+      }
+    }
+  }
+}
+</code></pre>
+                            <p>  <strong>Call the update function</strong></p>
+                            <p>  Now that we’ve verified the existence of an <code>update</code> function in the <code>handler</code> object, the next step is to invoke this function to get the <code>updated</code> <code>value</code>.</p>
+                            <p>  <strong>Specification Line:</strong></p>
+                        </details>
+
+                        <pre><code class="language-lua">4ai2. Let updated be ? Call(updateFn, handler, « e.[[Value]], key, M »).
+</code></pre>
+                        <p>  In this context, we need to call the <code>update</code> function on the current value associated with the <code>Map</code> entry. This involves passing <code>e.[[Value]]</code> (the existing <code>value</code>), <code>key</code>, and <code>M</code> as arguments to the function.</p>
+                        <p>  To perform this function call in self-hosted JavaScript™, we’ll use <code>callContentFunction</code>, to call <code>updateFn</code> with <code>M</code> as the scope and <code>eValue</code> (the existing <code>value</code>) and <code>key</code> as the arguments. The result of this call should be stored as <code>var updated</code>, which we’ll then use to update the <code>Map</code> entry. Why use <code>callContentFunction</code> instead of <code>callFunction</code>? <code>callFunction</code> is faster than <code>callContentFunction</code>, however the latter is safer with respect to user content. Since the <code>handler</code> object is passed by the user, <code>callContentFunction</code> is reasonable. You can read a more detailed explanation <a href="https://udn.realityripple.com/docs/Mozilla/Projects/SpiderMonkey/Internals/self-hosting" target="_blank">here</a>.</p>
+                        <details>
+                            <summary>Solution</summary>
+
+                            <pre><code class="language-js">function MapUpsert(key, handler) {
+  var M = this;
+
+  if (!IsObject(M) || (M = GuardToMapObject(M)) === null) {
+    return callFunction(
+      CallMapMethodIfWrapped,
+      this,
+      key,
+      handler,
+      &quot;MapUpsert&quot;
+    );
+  }
+
+  var entries = callFunction(std_Map_entries, M);
+
+  for (var e of allowContentIter(entries)) {
+    var eKey = e[0];
+    var eValue = e[1];
+
+    if (SameValueZero(key, eKey)) {
+      if (callFunction(Object_hasOwnProperty, handler, &#39;update&#39;)) {
+        var updateFN = handler[&#39;update&#39;];
+        var updated = callContentFunction(updateFN, M, eValue, key);
+        //...
+      }
+    }
+  }
+}
+</code></pre>
+                        </details>
+
+                        <p>  <strong>Update the <code>value</code> in the <code>Map</code></strong></p>
+                        <p>  Once we have the <code>updated</code> <code>value</code> from calling the <code>update</code> function, we can proceed to replace the current <code>value</code> in the map entry.</p>
+                        <p>  <strong>Specification Line:</strong></p>
+                        <pre><code class="language-lua">4ai3. Set e.[[Value]] to updated.
+</code></pre>
+                        <p>  This step involves using the <code>std_Map_set</code> function, a standard self-hosted operation that allows us to safely set a new <code>value</code> for a specified <code>key</code> in the <code>Map</code>. Since <code>std_Map_set</code> is a built-in function available to self-hosted code, we’ll call it to update the entry with our newly computed <code>updated</code> <code>value</code>.</p>
+                        <p>   <strong>Recall the standard built-in map operations specified in <code>SelfHosting.cpp</code>:</strong></p>
+                        <pre><code class="language-cpp">// Standard builtins used by self-hosting.
+// Code snippet from SelfHosting.cpp
+    JS_FN(&quot;std_Map_entries&quot;, MapObject::entries, 0, 0),
+    JS_FN(&quot;std_Map_get&quot;, MapObject::get, 1, 0),
+    JS_FN(&quot;std_Map_set&quot;, MapObject::set, 2, 0),
+</code></pre>
+                        <p>   Use <code>callFunction</code> and <code>std_Map_entries</code> to set the new <code>value</code>.</p>
+                        <details>
+                            <summary>Solution</summary>
+
+                            <pre><code class="language-js">function MapUpsert(key, handler) {
+  var M = this;
+
+  if (!IsObject(M) || (M = GuardToMapObject(M)) === null) {
+    return callFunction(
+      CallMapMethodIfWrapped,
+      this,
+      key,
+      handler,
+      &quot;MapUpsert&quot;
+    );
+  }
+
+  var entries = callFunction(std_Map_entries, M);
+
+  for (var e of allowContentIter(entries)) {
+    var eKey = e[0];
+    var eValue = e[1];
+
+    if (SameValueZero(key, eKey)) {
+      if (callFunction(Object_hasOwnProperty, handler, &#39;update&#39;)) {
+        var updateFN = handler[&#39;update&#39;];
+        var updated = callContentFunction(updateFN, M, eValue, key);
+        callFunction(std_Map_set, M, key, updated);
+      }
+    }
+  }
+}
+</code></pre>
+                            <p>  <strong><code>Return</code> the <code>value</code></strong></p>
+                            <p>  We have now <code>updated</code> the <code>value</code>, and can <code>return</code> it.</p>
+                            <p>  <strong>Specification Line:</strong></p>
+                        </details>
+
+                        <pre><code class="language-lua">4aii. Return e.[[Value]].
+</code></pre>
+                        <p>  <code>return</code> the <code>updated</code> <code>value</code>.</p>
+                        <details>
+                            <summary>Solution</summary>
+
+                            <pre><code class="language-js">function MapUpsert(key, handler) {
+  var M = this;
+
+  if (!IsObject(M) || (M = GuardToMapObject(M)) === null) {
+    return callFunction(
+      CallMapMethodIfWrapped,
+      this,
+      key,
+      handler,
+      &quot;MapUpsert&quot;
+    );
+  }
+
+  var entries = callFunction(std_Map_entries, M);
+
+  for (var e of allowContentIter(entries)) {
+    var eKey = e[0];
+    var eValue = e[1];
+
+    if (SameValueZero(key, eKey)) {
+      if (callFunction(Object_hasOwnProperty, handler, &#39;update&#39;)) {
+        var updateFN = handler[&#39;update&#39;];
+        var updated = callContentFunction(updateFN, M, eValue, key);
+        callFunction(std_Map_set, M, key, updated);
+      }
+
+      return callFunction(std_Map_get, M, key);
+    }
+  }
+}
+</code></pre>
+                        </details>
+
+                        <h3 id="step-5---implementing-the-insert-handler">Step 5 - Implementing The <code>Insert</code> Handler</h3>
+                        <p>  In this step, we’ll handle the scenario where the specified <code>key</code> doesn’t exist in the <code>Map</code>.</p>
+                        <p>  <strong>The Specification States</strong></p>
+                        <pre><code class="language-lua">5. Let insertFn be ? Get(handler, &quot;insert&quot;).
+6. Let inserted be ? Call(insertFn, handler, « e.[[Value]], key, M »).
+7. Set e.[[Value]] to inserted.
+8. Return e.[[Value]].
+</code></pre>
+                        <p>  This section is similar to our approach for updating an existing entry, except here we’re adding a new entry to the <code>Map</code>. If the <code>key</code> isn’t found, we retrieve the <code>insert</code> function from the <code>handler</code> and invoke it to generate the initial <code>value</code> for this new <code>key</code>-<code>value</code> pair.</p>
+                        <p>  The section uses similar techniques to the <code>update</code> scenario. Use the knowledge and experience you have gained so far to implement the <code>insert</code> handler.</p>
+                        <details>
+                            <summary>Solution</summary>
+
+                            <pre><code class="language-js">function MapUpsert(key, handler) {
+  var M = this;
+
+  if (!IsObject(M) || (M = GuardToMapObject(M)) === null) {
+    return callFunction(
+      CallMapMethodIfWrapped,
+      this,
+      key,
+      handler,
+      &quot;MapUpsert&quot;
+    );
+  }
+
+  var entries = callFunction(std_Map_entries, M);
+
+  for (var e of allowContentIter(entries)) {
+    var eKey = e[0];
+    var eValue = e[1];
+
+    if (SameValueZero(key, eKey)) {
+      if (callFunction(Object_hasOwnProperty, handler, &#39;update&#39;)) {
+        var updateFN = handler[&#39;update&#39;];
+        var updated = callContentFunction(updateFN, M, eValue, key);
+        callFunction(std_Map_set, M, key, updated);
+      }
+
+      return callFunction(std_Map_get, M, key);
+    }
+  }
+
+  var insertFN = handler[&#39;insert&#39;];
+  var inserted = callFunction(insertFN, key, M);
+  callFunction(std_Map_set, M, key, inserted);
+
+  return callFunction(std_Map_get, M, key);
+}
+</code></pre>
+                        </details>
+
+                        <h3 id="test-the-implementation">Test the implementation</h3>
+                        <p>  Now that we have implemented the function, it&#39;s essential that we test it to verify it behaves as intended.</p>
+                        <p>  Recall, you can create files and run them with the command:</p>
+                        <pre><code class="language-sh">./mach run MyFileName.js
+</code></pre>
+                        <p>  Create a script to test your implementation or use the sample script below:</p>
+                        <details>
+                            <summary>Script</summary>
+
+                            <pre><code class="language-js">  console.log(&quot;Running tests for Map.prototype.upsert proposal...&quot;);
+
+  // Utility function for logging test results
+  function logResult(testName, actual, expected) {
+   console.log(`Test: ${testName}`);
+   console.log(`Expected: ${expected}`);
+   console.log(`Actual: ${actual}`);
+   console.log(actual === expected ? &quot;Passed&quot; : &quot;Failed&quot;);
+   console.log(&#39;------------------------------&#39;);
+  }
+
+  // Test 1: Update on existing key
+  (function testUpdateExistingKey() {
+   const m = new Map();
+   m.set(&quot;key&quot;, &quot;val&quot;);
+
+   m.upsert(&quot;key&quot;, {
+       update: () =&gt; &quot;updated&quot;
+   });
+
+   logResult(&quot;Update on existing key&quot;, m.get(&quot;key&quot;), &quot;updated&quot;);
+  })();
+
+  // Test 2: Insert on existing key (should not change existing value)
+  (function testInsertExistingKey() {
+   const m = new Map();
+   m.set(&quot;key&quot;, &quot;val&quot;);
+
+   m.upsert(&quot;key&quot;, {
+       insert: () =&gt; &quot;inserted&quot;
+   });
+
+   logResult(&quot;Insert on existing key (no change)&quot;, m.get(&quot;key&quot;), &quot;val&quot;);
+  })();
+
+  // Test 3: Insert and update on existing key
+  (function testInsertAndUpdateExistingKey() {
+   const m = new Map();
+   m.set(&quot;key&quot;, &quot;val&quot;);
+
+   m.upsert(&quot;key&quot;, {
+       update: () =&gt; &quot;updated&quot;,
+       insert: () =&gt; &quot;inserted&quot;
+   });
+
+   logResult(&quot;Insert and update on existing key&quot;, m.get(&quot;key&quot;), &quot;updated&quot;);
+  })();
+
+  // Test 4: Update nonexistent key (should not update, no effect)
+  (function testUpdateNonexistentKey() {
+   const m = new Map();
+
+   try {
+       m.upsert(&quot;nonexistent&quot;, {
+           update: () =&gt; &quot;updated&quot;
+       });
+   } catch (e) {
+       console.log(&quot;Test: Update nonexistent key&quot;);
+       console.log(&quot;Expected Error: &quot; + e.message);
+       console.log(&#39;------------------------------&#39;);
+   }
+
+  })();
+
+  // Test 5: Insert nonexistent key
+  (function testInsertNonexistentKey() {
+   const m = new Map();
+
+   m.upsert(&quot;nonexistent&quot;, {
+       insert: () =&gt; &quot;inserted&quot;
+   });
+
+   logResult(&quot;Insert nonexistent key&quot;, m.get(&quot;nonexistent&quot;), &quot;inserted&quot;);
+  })();
+
+  // Test 6: Insert and update nonexistent key (insert should happen)
+  (function testInsertAndUpdateNonexistentKey() {
+   const m = new Map();
+
+   m.upsert(&quot;nonexistent&quot;, {
+       update: () =&gt; &quot;updated&quot;,
+       insert: () =&gt; &quot;inserted&quot;
+   });
+
+   logResult(&quot;Insert and update nonexistent key&quot;, m.get(&quot;nonexistent&quot;), &quot;inserted&quot;);
+  })();
+
+  // Test 7: Increment counter twice
+  (function testIncrementCounter() {
+   const counter = new Map();
+
+   counter.upsert(&quot;a&quot;, {
+       update: (v) =&gt; v + 1,
+       insert: () =&gt; 1
+   });
+   logResult(&quot;Increment counter first time&quot;, counter.get(&quot;a&quot;), 1);
+
+   counter.upsert(&quot;a&quot;, {
+       update: (v) =&gt; v + 1,
+       insert: () =&gt; 1
+   });
+   logResult(&quot;Increment counter second time&quot;, counter.get(&quot;a&quot;), 2);
+  })();
+
+</code></pre>
+                        </details>
                     </div>
                 </section>
 
