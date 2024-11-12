@@ -319,7 +319,170 @@ contributors: Your name
                 <section class="collapsible" id="optimization">
                     <h2>Optimization</h2>
                     <div class="content-body">
-                        <p>[Optimization techniques go here]</p>
+                        <p>A proposal goes through several <a href="https://www.proposals.es/stages" target="_blank">stages</a> before it becomes a part of the ECMAScript® language.
+                            Every new feature introduces complexity, which can affect the performance of the SpiderMonkey engine.
+                            Therefore optimization becomes crucial when designing and implementing these features.
+                            In our case there is especially one line which could use some optimization:</p>
+                        <pre><code>4. For each Record { [[Key]], [[Value]] } e that is an element of entries, do</code></pre>
+                        <p>  As of right now it is implemented like this:</p>
+                        <pre><code class="language-js">for (var e of allowContentIter(entries)) {
+  var eKey = e[0];
+  var eValue = e[1];
+  //...
+}
+</code></pre>
+                        <p>  The worst case for this is that is loops through the entire <code>entries</code>. The result is a runtime of <strong><code>O(n)</code></strong> where <code>n</code> is the size of the <code>Map</code>.
+                            This is rather slow, considering a lookup in maps should be <strong><code>~O(1)</code></strong>, given an efficient <code>HashTable</code> implementation.
+                            Therefore, we decided to try optimizing this line.</p>
+                        <p>  <strong>Demonstration: Create a new file; Runtime.js with the code below and run the script with <code>./mach build</code> and <code>./mach run Runtime.js</code></strong></p>
+                        <details>
+                            <summary>Runtime script</summary>
+
+                            <pre><code class="language-js">  const iterations = 1000;
+
+// Function to measure runtime of a given block of code
+function measureRuntime(callback, description) {
+    console.log(&quot;############################&quot;);
+    console.log(description);
+    const startTime = Date.now(); // Get the start time in milliseconds
+
+    // Execute the code block (callback function)
+    callback();
+
+    const endTime = Date.now(); // Get the end time in milliseconds
+    const runtime = endTime - startTime; // Calculate the runtime
+    console.log(`Runtime: ${runtime} milliseconds \n`);
+}
+
+// test upsert for e record of entries
+function withUpsert() {
+    const m = new Map();
+
+    var k = 0;
+    while (k &lt; iterations) {
+        m.upsert(k, &quot;val&quot;);
+        k++;
+    }
+}
+
+//test without upsert
+function withoutUpsert() {
+    const m = new Map();
+
+    var k = 0;
+    while (k &lt; iterations) {
+        if (m.has(k)) {
+            m.get(k);
+        } else {
+            m.set(k, &quot;val&quot;);
+        }
+        k++;
+    }
+}
+
+console.log(&quot;Starting tests...&quot;);
+measureRuntime(withUpsert, &quot;Test upsert for &quot; + iterations + &quot; iterations&quot;);
+measureRuntime(withoutUpsert, &quot;Test without upsert for &quot; + iterations + &quot; iterations&quot;);
+</code></pre>
+                        </details>
+
+
+                        <p>  One solution we had, was to check if the entry was in the <code>Map</code>, by using <code>Map::has</code>.
+                            The problem with this, is that this method is not currently exposed to self-hosted JavaScript™ code. The reason for this
+                            is seemingly because there has not been any need for the <code>Map::has</code> method in self-hosted code previously.</p>
+                        <p>  <strong>Exposing <code>std_Map_has</code> to self-hosted code</strong></p>
+                        <p>  <code>Selfhosting.cpp</code></p>
+                        <pre><code class="language-cpp">
+  // Standard builtins used by self-hosting.
+  //...
+  JS_FN(&quot;std_Map_entries&quot;, MapObject::entries, 0, 0),
+  JS_FN(&quot;std_Map_get&quot;, MapObject::get, 1, 0),
+  JS_FN(&quot;std_Map_set&quot;, MapObject::set, 2, 0),
+  //...
+</code></pre>
+                        <p>  We want to add this line so that we can use <code>has</code> in our optimized implementation.</p>
+                        <pre><code class="language-cpp">
+  JS_INLINABLE_FN(&quot;std_Map_has&quot;, MapObject::has, 1, 0, MapHas),
+</code></pre>
+                        <p>  Copy the line and paste it into <code>js/src/vm/Selfhosting.cpp</code>, before <code>MapObject::set</code> (to ensure consistency across files).</p>
+                        <details>
+                            <summary>Solution</summary>
+
+                            <pre><code class="language-cpp">
+// Standard builtins used by self-hosting.
+//...
+JS_FN(&quot;std_Map_entries&quot;, MapObject::entries, 0, 0),
+JS_FN(&quot;std_Map_get&quot;, MapObject::get, 1, 0),
+JS_INLINABLE_FN(&quot;std_Map_has&quot;, MapObject::has, 1, 0, MapHas),
+JS_FN(&quot;std_Map_set&quot;, MapObject::set, 2, 0),
+//...
+</code></pre>
+                        </details>
+
+                        <p>  We also need to make the <code>has</code> method publicly exposed in <code>MapObject.h</code> to use it in self-hosted code.</p>
+                        <p>  In <code>MapObject.h</code>, move this line from <strong>private</strong> to <strong>public</strong>.</p>
+                        <pre><code class="language-cpp">[[nodiscard]] static bool has(JSContext* cx, unsigned argc, Value* vp);
+</code></pre>
+                        <details>
+                            <summary>(This could be tricky) Let's break down the structure of the file: </summary>
+
+                            <pre><code class="language-cpp">  class MapObject : public NativeObject {
+    public:
+      //...
+      const ValueMap* getData() { return getTableUnchecked(); }
+
+      [[nodiscard]] static bool get(JSContext* cx, unsigned argc, Value* vp);
+      [[nodiscard]] static bool set(JSContext* cx, unsigned argc, Value* vp);
+      //add has here
+
+      //...
+
+    private:
+      //...
+      [[nodiscard]] static bool size_impl(JSContext* cx, const CallArgs&amp; args);
+      [[nodiscard]] static bool size(JSContext* cx, unsigned argc, Value* vp);
+      [[nodiscard]] static bool get_impl(JSContext* cx, const CallArgs&amp; args);
+      [[nodiscard]] static bool has_impl(JSContext* cx, const CallArgs&amp; args);
+      [[nodiscard]] static bool has(JSContext* cx, unsigned argc, Value* vp); //remove this line
+      [[nodiscard]] static bool set_impl(JSContext* cx, const CallArgs&amp; args);
+      [[nodiscard]] static bool delete_impl(JSContext* cx, const CallArgs&amp; args);
+      [[nodiscard]] static bool delete_(JSContext* cx, unsigned argc, Value* vp);
+      [[nodiscard]] static bool keys_impl(JSContext* cx, const CallArgs&amp; args);
+      //...
+  }
+</code></pre>
+                        </details>
+
+                        <p>  The <code>std_Map_has</code> method should now be available in self-hosted JavaScript™.</p>
+                        <h3 id="optimize-the-function">Optimize the function</h3>
+                        <p>  With <code>has</code> now exposed to self-hosted code, alter your implementation to use <code>std_Map_has</code> instead of a <code>for-of</code> loop
+                            and <code>SameValueZero</code>.</p>
+                        <details>
+                            <summary>Solution</summary>
+
+                            <pre><code class="language-js">
+  function MapUpsert(key, value) {
+    var M = this;
+
+    if (!IsObject(M) || (M = GuardToMapObject(M)) === null) {
+        return callFunction(
+            CallMapMethodIfWrapped,
+            this,
+            key,
+            value,
+            &quot;MapUpsert&quot;
+        );
+    }
+
+    if (callFunction(std_Map_has, M, key)) {
+      return callFunction(std_Map_get, M, key);
+    }
+
+    callFunction(std_Map_set, M, key, value);
+      return value;
+  }
+</code></pre>
+                        </details>
                     </div>
                 </section>
 
