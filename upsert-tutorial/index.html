@@ -12,17 +12,20 @@
         <aside class="sidebar">
             <h2>Table of Contents</h2>
             <ul>
+                <li><a href="#ecmascript">ECMAScript®</a></li>
                 <li><a href="#introduction">Introduction</a></li>
+                <li><a href="#whats-covered">What’s Covered in This Tutorial?</a></li>
                 <li><a href="#proposal-overview">The Map.prototype.upsert Proposal</a></li>
                 <li><a href="#installation">Installing Mozilla Unified</a></li>
                 <li><a href="#specification">How to Read the ECMA-262 Language Specification</a></li>
                 <li><a href="#searchfox">Using Searchfox</a></li>
                 <li><a href="#implementation">Implementation</a></li>
-                <li><a href="#optimization">Optimization</a></li>
-                <li><a href="#testing">Testing with Test262</a></li>
                 <li><a href="#issues">Issues with the Original Proposal</a></li>
                 <li><a href="#new-proposal">Explaining the New Proposal</a></li>
+                <li><a href="#implementing-new-proposal">Implementing the New Proposal</a></li>
                 <li><a href="#ecmarkup">Writing the Specification in Ecmarkup</a></li>
+                <li><a href="#optimization">Optimization</a></li>
+                <li><a href="#testing">Testing with Test262</a></li>
             </ul>
         </aside>
 
@@ -36,70 +39,128 @@
             </header>
 
             <main>
-                <!-- Introduction -->
+                <!-- ECMAScript® Section (non-collapsible) -->
+                <section id="ecmascript">
+                    <h2>ECMAScript®</h2>
+                    <p>
+                        JavaScript™ is standardized by ECMAScript® and specified in the 
+                        <a href="https://ecma-international.org/publications-and-standards/standards/ecma-262/" target="_blank">
+                            ECMA-262 language specification
+                        </a>, 
+                        which is maintained by Ecma International through the 
+                        <a href="https://tc39.es/" target="_blank">TC39 committee</a>. 
+                        ECMAScript® defines the core features of the language, providing a standard that ensures consistency across different JavaScript™ engines. 
+                        Major engines like 
+                        <a href="https://v8.dev/" target="_blank">V8</a> (used in Chrome and Node.js), 
+                        <a href="https://developer.apple.com/documentation/javascriptcore" target="_blank">JavaScriptCore</a> (Safari), 
+                        and 
+                        <a href="https://spidermonkey.dev/" target="_blank">SpiderMonkey</a> (Firefox) 
+                        implement these specifications, allowing developers to write code that behaves similarly across different environments.
+                    </p>
+                    <p>
+                        SpiderMonkey, the engine developed by Mozilla, powers JavaScript™ execution in Firefox and supports the development of new language features. 
+                        This tutorial focuses on working within SpiderMonkey to implement and test a new JavaScript™ proposal, providing insight into both the ECMAScript® 
+                        standardization process and the inner workings of a JavaScript™ engine.
+                    </p>
+                </section>
+
+                <!-- Introduction Section (non-collapsible) -->
                 <section id="introduction">
                     <h2>Introduction</h2>
-                    <p>[Introduction content goes here]</p>
+                    <p>Welcome to this detailed tutorial on how to implement and understand the Map.prototype.upsert proposal. This guide is tailored to help both beginners and advanced developers learn how to contribute to JavaScript™ language development by implementing a new feature in SpiderMonkey, Mozilla's JavaScript™ engine. We’ll cover all the necessary steps, from downloading and setting up the development environment to writing the upsert method and testing it with the official test suite, Test262.</p>
+                    <p>We'll start with an introduction to the Map.prototype.upsert proposal, highlighting its benefits for developers. From there, you'll be guided through setting up the development environment using Mozilla's SpiderMonkey JavaScript™ engine. You'll then implement the upsert method using both self-hosted JavaScript™ and (a little bit of) C++, ensuring alignment with the ECMAScript® specification.</p>
+                    <p>By the end of this tutorial, you'll have implemented a fully functional upsert method and gained valuable insight into the process of designing, testing, and standardizing JavaScript™ features.</p>
                 </section>
 
-                <!-- Proposal Overview -->
-                <section id="proposal-overview">
+                <!-- What's Covered Section (non-collapsible) -->
+                <section id="whats-covered">
+                    <h2>What’s Covered in This Tutorial?</h2>
+                    <ul>
+                        <li>The Map.prototype.upsert Proposal: Learn what this proposal is, how it works, and why it’s beneficial for JavaScript™ developers.</li>
+                        <li>Setting Up the Development Environment: How to download and build Mozilla Unified, the repository that contains SpiderMonkey.</li>
+                        <li>Implementing the Proposal: Implementing the upsert method in self-hosted JavaScript™ and C++.</li>
+                        <li>Debugging and Testing: How to test your implementation using Test262 and run custom scripts.</li>
+                        <li>Optimizing Your Code: Learn about performance considerations and optimizations.</li>
+                        <li>Contributing to the ECMAScript® Standard: Understand how to write specification-compliant code and contribute to ECMAScript®.</li>
+                    </ul>
+                </section>
+
+                <!-- Collapsible Sections for Detailed Topics -->
+                <section class="collapsible" id="proposal-overview">
                     <h2>The Map.prototype.upsert Proposal</h2>
-                    <p>[Proposal overview content goes here]</p>
+                    <div class="content-body">
+                        <p>[Details on the Map.prototype.upsert proposal go here]</p>
+                    </div>
                 </section>
 
-                <!-- Installing Mozilla Unified -->
-                <section id="installation">
+                <section class="collapsible" id="installation">
                     <h2>Installing Mozilla Unified</h2>
-                    <p>[Installation steps go here]</p>
+                    <div class="content-body">
+                        <p>[Installation steps go here]</p>
+                    </div>
                 </section>
 
-                <!-- How to Read the ECMA-262 Language Specification -->
-                <section id="specification">
+                <section class="collapsible" id="specification">
                     <h2>How to Read the ECMA-262 Language Specification</h2>
-                    <p>[Specification reading guide goes here]</p>
+                    <div class="content-body">
+                        <p>[Specification reading guide goes here]</p>
+                    </div>
                 </section>
 
-                <!-- Using Searchfox -->
-                <section id="searchfox">
+                <section class="collapsible" id="searchfox">
                     <h2>Using Searchfox</h2>
-                    <p>[Searchfox usage tips go here]</p>
+                    <div class="content-body">
+                        <p>[Searchfox usage tips go here]</p>
+                    </div>
                 </section>
 
-                <!-- Implementation -->
-                <section id="implementation">
+                <section class="collapsible" id="implementation">
                     <h2>Implementation</h2>
-                    <p>[Implementation guide goes here]</p>
+                    <div class="content-body">
+                        <p>[Implementation guide goes here]</p>
+                    </div>
                 </section>
 
-                <!-- Optimization -->
-                <section id="optimization">
-                    <h2>Optimization</h2>
-                    <p>[Optimization techniques go here]</p>
-                </section>
-
-                <!-- Testing with Test262 -->
-                <section id="testing">
-                    <h2>Testing with Test262</h2>
-                    <p>[Testing guide goes here]</p>
-                </section>
-
-                <!-- Issues with the Original Proposal -->
-                <section id="issues">
+                <section class="collapsible" id="issues">
                     <h2>Issues with the Original Proposal</h2>
-                    <p>[Explanation of issues with the original proposal goes here]</p>
+                    <div class="content-body">
+                        <p>[Explanation of issues with the original proposal goes here]</p>
+                    </div>
                 </section>
 
-                <!-- Explaining the New Proposal -->
-                <section id="new-proposal">
+                <section class="collapsible" id="new-proposal">
                     <h2>Explaining the New Proposal</h2>
-                    <p>[Details of the new proposal go here]</p>
+                    <div class="content-body">
+                        <p>[Details of the new proposal go here]</p>
+                    </div>
                 </section>
 
-                <!-- Writing the Specification in Ecmarkup -->
-                <section id="ecmarkup">
+                <section class="collapsible" id="implementing-new-proposal">
+                    <h2>Implementing the New Proposal</h2>
+                    <div class="content-body">
+                        <p>[Guide to implementing the new proposal goes here]</p>
+                    </div>
+                </section>
+
+                <section class="collapsible" id="ecmarkup">
                     <h2>Writing the Specification in Ecmarkup</h2>
-                    <p>[Guide for writing in Ecmarkup goes here]</p>
+                    <div class="content-body">
+                        <p>[Guide for writing in Ecmarkup goes here]</p>
+                    </div>
+                </section>
+
+                <section class="collapsible" id="optimization">
+                    <h2>Optimization</h2>
+                    <div class="content-body">
+                        <p>[Optimization techniques go here]</p>
+                    </div>
+                </section>
+
+                <section class="collapsible" id="testing">
+                    <h2>Testing with Test262</h2>
+                    <div class="content-body">
+                        <p>[Testing guide goes here]</p>
+                    </div>
                 </section>
             </main>
 
@@ -108,5 +169,14 @@
             </footer>
         </div>
     </div>
+
+    <!-- Script to enable collapsible sections -->
+    <script>
+        document.querySelectorAll('.collapsible').forEach(section => {
+            section.querySelector('h2').addEventListener('click', () => {
+                section.querySelector('.content-body').classList.toggle('hidden');
+            });
+        });
+    </script>
 </body>
 </html>
