@@ -125,7 +125,11 @@
                 <section class="collapsible" id="issues">
                     <h2>Issues with the Original Proposal</h2>
                     <div class="content-body">
-                        <p>[Explanation of issues with the original proposal goes here]</p>
+                        <p><p>The proposal we have dealt with so far introduced a flexible solution by allowing both an <code>update</code> and an <code>insert</code> function, which added unnecessary complexity to the usage of <code>upsert</code>. Flexibility is generally a good thing. However in the case of <code>Map.prototype.upsert</code>, the flexibility comes at the expense of simplicity and ease of use, which is very important for widespread adoption in programming languages.</p>
+                        <p>The process of checking if a <code>key</code> exists and then inserting it if not, is likely the primary, in-demand use case for this method. By following the steps of this proposal, the process became unnecessarily complicated. Most developers typically just need to insert a <code>value</code> if the given <code>key</code> is missing, rather than having to provide separate logic for both <code>insert</code> and <code>update</code>. </p>
+                        <p>In addition, the approach of the original proposal doesn&#39;t align well with common practices in other known programming languages. An example which offers a similar and simpler functionality is seen in Python and is called <a href="https://docs.python.org/2/library/stdtypes.html#dict.setdefault" target="_blank"><code>setdefault</code></a>. You can read more about this method in the next section of the tutorial.</p>
+                        <p>By making it overcomplicated and a feature that is not commonly found in other languages, the method is at risk at being underutilized. Reducing the scope to a more straightforward function makes it more intuitive and more likely to be used effectively. </p>
+                        </p>
                     </div>
                 </section>
 
