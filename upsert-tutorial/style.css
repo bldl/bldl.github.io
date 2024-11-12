@@ -79,9 +79,14 @@ section h2 {
     margin-bottom: 15px;
 }
 
+section h3 {
+    padding-top: 15px;
+    margin-bottom: 10px;
+}
+
 section p {
     font-size: 1em;
-    padding-top: 10px;
+    padding: 5px;
     color: #444;
     line-height: 1.6;
 }
@@ -89,8 +94,13 @@ section p {
 section li {
     font-size: 1em;
     color: #444;
-    padding-top:10px;
+    padding:5px;
     line-height: 1.6;
+}
+
+section summary {
+    padding-top: 5px;
+    padding-bottom: 10px;
 }
 
 footer {
