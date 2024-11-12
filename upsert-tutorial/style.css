@@ -86,6 +86,13 @@ section p {
     line-height: 1.6;
 }
 
+section li {
+    font-size: 1em;
+    color: #444;
+    padding-top:10px;
+    line-height: 1.6;
+}
+
 footer {
     margin-top: 40px;
     text-align: center;
