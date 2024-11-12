@@ -81,7 +81,15 @@ section h2 {
 
 section p {
     font-size: 1em;
+    padding-top: 10px;
     color: #444;
+    line-height: 1.6;
+}
+
+section li {
+    font-size: 1em;
+    color: #444;
+    padding-top:10px;
     line-height: 1.6;
 }
 
@@ -90,4 +98,44 @@ footer {
     text-align: center;
     font-size: 0.9em;
     color: #666;
+}
+
+/* Tab Container Styles */
+.tab-container {
+    margin-top: 20px;
+}
+
+/* Tab Buttons */
+.tabs {
+    display: flex;
+    border-bottom: 2px solid #ccc;
+}
+
+.tab-button {
+    background: #f1f1f1;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-right: 1px solid #ccc;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    outline: none;
+    transition: background 0.3s;
+}
+
+.tab-button.active {
+    background: #ddd;
+    font-weight: bold;
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+.tab-content.active {
+    display: block;
 }
