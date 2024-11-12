@@ -364,5 +364,39 @@ contributors: Your name
             });
         });
     </script>
+
+    <!-- Script for tabs -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Select all tab buttons and contents
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            // Function to show the selected tab
+            function openTab(tabId) {
+                // Hide all tab content
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                // Remove 'active' class from all buttons
+                tabButtons.forEach(button => button.classList.remove('active'));
+
+                // Show the clicked tab's content and activate the button
+                document.getElementById(tabId).classList.add('active');
+                document.querySelector(`.tab-button[data-tab="${tabId}"]`).classList.add('active');
+            }
+
+            // Attach event listeners to all tab buttons
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    openTab(tabId);
+                });
+            });
+
+            // Initialize by showing the first tab by default
+            openTab(tabButtons[0].getAttribute('data-tab'));
+        });
+
+    </script>
 </body>
 </html>
