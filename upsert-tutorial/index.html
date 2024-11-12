@@ -154,72 +154,53 @@
                                         <button class="tab-button" data-tab="ecmarkup-linux-tab">Linux</button>
                                     </div>
                                     <div class="tab-content active" id="ecmarkup-windows-tab">
-                                        <p>NPM windows.</p>
+                                        <ol>
+                                            <li><p>First go to Node.js official website (<a href="https://nodejs.org/en">https://nodejs.org/en</a>), and download the Windows Installer (recommended version).</p>
+                                            </li>
+                                            <li><p>Run the installer and follow the instructions (make sure to check the box that says &quot;Automatically install necessary tools&quot;).</p>
+                                            </li>
+                                            <li><p>Verify installation by opening Command Prompt and typing:</p>
+                                            </li>
+                                        </ol>
+                                        <pre><code class="language-sh">node -v
+npm -v
+</code></pre>
+                                        <p>This should return the versions of Node.js and npm.</p>
                                     </div>
                                     <div class="tab-content" id="ecmarkup-mac-tab">
-                                        <p>NPM mac</p>
+                                        <ol>
+                                            <li>Open Terminal</li>
+                                            <li>Install Node.js via Homebrew by running the following command:</li>
+                                        </ol>
+                                        <pre><code class="language-sh">brew install node
+</code></pre>
+                                        <ol start="3">
+                                            <li>Verify installation by typing:</li>
+                                        </ol>
+                                        <pre><code class="language-sh">node -v
+npm -v
+</code></pre>
                                     </div>
                                     <div class="tab-content" id="ecmarkup-linux-tab">
-                                        <p>NPM linux</p>
+                                        <ol>
+                                            <li>Open Terminal</li>
+                                            <li>Update your package list:</li>
+                                        </ol>
+                                        <pre><code class="language-sh">sudo apt update
+</code></pre>
+                                        <ol start="3">
+                                            <li>Install Node.js by running:</li>
+                                        </ol>
+                                        <pre><code class="language-sh">sudo apt install node.js spm
+</code></pre>
+                                        <ol start="4">
+                                            <li>Verify the installation:</li>
+                                        </ol>
+                                        <pre><code class="language-sh">node -v
+npm -v
+</code></pre>
                                     </div>
                                 </div>
-                                <details>
-                                    <summary>
-                                        <b>Windows</b>
-                                    </summary>
-
-                                    <ol>
-                                        <li><p>First go to Node.js official website (<a href="https://nodejs.org/en">https://nodejs.org/en</a>), and download the Windows Installer (recommended version).</p>
-                                        </li>
-                                        <li><p>Run the installer and follow the instructions (make sure to check the box that says &quot;Automatically install necessary tools&quot;).</p>
-                                        </li>
-                                        <li><p>Verify installation by opening Command Prompt and typing:</p>
-                                        </li>
-                                    </ol>
-                                    <pre><code class="language-sh">node -v
-npm -v
-</code></pre>
-                                    <p>This should return the versions of Node.js and npm.</p>
-                                </details>
-
-                                <details>
-                                    <summary><b>Mac</b></summary>
-
-                                    <ol>
-                                        <li>Open Terminal</li>
-                                        <li>Install Node.js via Homebrew by running the following command:</li>
-                                    </ol>
-                                    <pre><code class="language-sh">brew install node
-</code></pre>
-                                    <ol start="3">
-                                        <li>Verify installation by typing:</li>
-                                    </ol>
-                                    <pre><code class="language-sh">node -v
-npm -v
-</code></pre>
-                                </details>
-
-                                <details>
-                                    <summary><b>Linux</b></summary>
-
-                                    <ol>
-                                        <li>Open Terminal</li>
-                                        <li>Update your package list:</li>
-                                    </ol>
-                                    <pre><code class="language-sh">sudo apt update
-</code></pre>
-                                    <ol start="3">
-                                        <li>Install Node.js by running:</li>
-                                    </ol>
-                                    <pre><code class="language-sh">sudo apt install node.js spm
-</code></pre>
-                                    <ol start="4">
-                                        <li>Verify the installation:</li>
-                                    </ol>
-                                    <pre><code class="language-sh">node -v
-npm -v
-</code></pre>
-                                </details>
 
                             </li>
                             <li><p><strong>Installing <a href="https://tc39.es/ecmarkup/" target="_blank">Ecmarkup</a></strong></p>
