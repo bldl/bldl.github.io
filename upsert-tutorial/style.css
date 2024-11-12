@@ -153,3 +153,37 @@ footer {
 .tab-content.active {
     display: block;
 }
+
+/* Container Styling */
+.iframe-container {
+    width: 90%;
+    max-width: 800px;
+    height: 450px;
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background-color: #f9f9f9;
+    position: relative;
+    overflow: auto;
+}
+
+/* Zoom-Out Effect on iframe */
+.iframe-container iframe {
+    width: 130%; /* Increase iframe size */
+    height: 130%;
+    border: none;
+    transform: scale(0.75); /* Scale down to create zoom-out effect */
+    transform-origin: top left; /* Anchor scaling */
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.centered-paragraph {
+    text-align: center;       
+    margin: 0 auto 1rem;         
+    width: 90%;                  
+    max-width: 50rem;           
+}
