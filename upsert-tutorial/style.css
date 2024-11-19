@@ -114,6 +114,16 @@ footer {
     color: #666;
 }
 
+pre {
+    background-color: #c8c8c8; /* Light grey background */
+    padding: 2px; /* Padding around the code */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Soft shadow for depth */
+    overflow-x: auto; /* Horizontal scroll for long lines */
+    font-family: Consolas, "Courier New", monospace; /* Monospace font */
+    font-size: 0.9em; /* Slightly smaller font size for a code look */
+}
+
 /* Tab Container Styles */
 .tab-container {
     margin-top: 20px;
