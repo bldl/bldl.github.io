@@ -1076,17 +1076,12 @@ static const JSFunctionSpec object_methods[] = {
                 </section>
 
                 <section class="collapsible" id="new-proposal">
-                    <h2>Explaining the New Proposal</h2>
+                    <h2>Redesigning the Proposal</h2>
                     <div class="content-body">
-                        <p>The new <a href="https://github.com/tc39/proposal-upsert" target="_blank">proposal</a> presents the idea of implementing two different versions. </p>
-                        <p>  (1) Takes the arguments <code>key</code> and <code>value</code>. </p>
-                        <p>  (2) Takes the arguments <code>key</code> and <code>callbackfn</code></p>
-                        <p>  Both the respective versions with <code>value</code> and <code>callbackfn</code> serves the same principle as a <code>get</code> or <code>insert</code> if missing method on the <code>MapObject</code>. For the remainder of this tutorial we will focus on the <code>upsert(key, value)</code> version.</p>
-                        <p>   <strong>What is the motivation for a new proposal?</strong>
-                            A common problem when using a <code>Map</code> is how to handle doing a <code>Map</code> entry when you&#39;re not sure if the <code>key</code> already exists in the <code>Map</code>. This can be handled by first checking if the <code>key</code> is present, and then inserting or updating depending upon the result, but this is both inconvenient for the developer, and less than optimal, because it requires multiple lookups in the <code>Map</code> that could otherwise be handled in a single call.</p>
-                        <p>   <strong>What is the solution?</strong>
-                            A method that will check whether the given <code>key</code> already exists in the <code>Map</code>. If the <code>key</code> already exists, the <code>value</code> associated with the <code>key</code> is returned. Otherwise the new <code>key-value</code> pair is inserted in to the <code>Map</code>, before returning the newly input <code>value</code>.</p>
-                        <p>   <strong>Simple use of &quot;new&quot; upsert:</strong></p>
+                        <p>As we already alluded, a common problem when using a <code>Map</code> is how to handle doing a <code>Map</code> entry when you&#39;re not sure if the <code>key</code> already exists in the <code>Map</code>.
+                            This can be handled by first checking if the <code>key</code> is present, and then inserting or updating depending upon the result. However, this is both inconvenient for the developer, and far from being optimal - because it requires multiple lookups in the <code>Map</code> that could otherwise be handled in a single call.</p>
+                            <p>A possible solution to this is to have a method with the following behaviour: it will check whether the given <code>key</code> already exists in the <code>Map</code>, and, if the <code>key</code> already exists, the <code>value</code> associated with the <code>key</code> will be returned. Otherwise, the new <code>key</code>-<code>value</code> pair will be inserted into the <code>Map</code>, before returning the newly input <code>value</code>.</p>
+                            <p>Let&#39;s look at an example of how the new method <code>upsert</code> can be used.</p>                            
                         <pre><code class="language-js"> // Currently
  let prefs = new getUserPrefs();
  if (prefs.has(&quot;useDarkmode&quot;)) {
@@ -1101,13 +1096,8 @@ static const JSFunctionSpec object_methods[] = {
  let prefs = new getUserPrefs();
      prefs.upsert(&quot;useDarkmode&quot;, true); // Default to true
 </code></pre>
-                        <p>By using <code>upsert</code>, default values can be applied at different times, with the assurance that later defaults will not overwrite an existing <code>value</code>. This is obviously because the <code>key</code> already exists and will <code>return</code> the existing <code>key</code> instead of inserting or overwriting.</p>
-                        <details>
-                            <summary>
-                                Similar functionality in Python
-                            </summary>
-                            As mentioned earlier in this tutorial, there are similar functionalities in other languages such as Python and its setdefault method. In our case we use upsert on Map's. The setdefault method is used on dictionaries, lets use a similar code example:
-
+<p>By using <code>upsert</code>, default values can be applied at different times, with the assurance that later defaults will not overwrite an existing <code>value</code>. This is so because the <code>key</code> would already exist and calling <code>upsert</code> will return the existing <code>key</code> instead of inserting or overwriting.</p>
+<p>We can compare this new behaviour of the <code>upsert</code> method with the Python&#39;s <code>setDefault</code> method on dictionaries.</p>
                             <pre><code class="language-python"># Without setdefault
 prefs = {}
 if &quot;useDarkmode&quot; not in prefs :
@@ -1119,11 +1109,17 @@ dark_mode = prefs[&quot;useDarkmode&quot;]
 prefs = {}
 prefs.setdefault(&quot;useDarkmode&quot;, True)
 </code></pre>
-                        </details>
 
-                        <p>To implement the updated proposal, we first need to adapt the specification. </p>
-                        <h3 id="a-draft-of-the-new-specification-for-the-proposal">A Draft of The New Specification For The Proposal.</h3>
-                        <p>The new specification now looks like this. It draws similarities from the old specification and adapts to the newly specified behaviour we seek in the <code>Map.prototype.upsert</code> method.</p>
+<p>In the <a href="https://bldl.github.io/upsert-tutorial/key-value-callback-spec/keyValueSpec.html" target="_blank">new version</a> of the <code>upsert</code> proposal, we will consider two different signatures for the method <code>upsert</code>:</p>
+<ul>
+<li>taking arguments <code>key</code> and <code>value</code></li>
+<li>taking arguments <code>key</code> and <code>callbackfn</code></li>
+</ul>
+<p>Both versions serve the same principle as a <code>get</code> or <code>insert</code>-if-missing method on the <code>MapObject</code>. The different signatures offer more flexibility to the developer. The <code>value</code> version is simple and works for most use-cases, while the <code>callbackfn</code> version offers more versatility and could for example be used to compute a conditional insert-value.</p>
+<p>For the remainder of this tutorial, we will focus on the <code>upsert(key, value)</code> version.</p>
+<p>To implement the new proposal, we first need to adapt the specification. </p>
+<h2 id="drafting-the-new-specification-of-the-proposal">Drafting the New Specification of the Proposal</h2>
+<p>The new specification draws from the original specification and adapts to the newly specified behaviour we described above.</p>
                         <pre><code class="language-lua">1. Let M be the this value.
 2. Perform ? RequireInternalSlot(M, [[MapData]]).
 3. Let entries be the List that is M.[[MapData]].
@@ -1133,7 +1129,7 @@ prefs.setdefault(&quot;useDarkmode&quot;, True)
 6. Return e.[[Value]].
 </code></pre>
                         <p>  The next section will be based on this draft of the new specification. Later in the tutorial we will look into how we can write the specification in ecmarkup.</p>
-                        <p class="centered-paragraph">  An html version of the specification can be found <a href="https://bldl.github.io/upsert-tutorial/key-value-callback-spec/Map.prototype.getOrInsert.html" target="_blank">here.</a></p>
+                        <p class="centered-paragraph">  An HTML version of the specification can be found <a href="https://bldl.github.io/upsert-tutorial/key-value-callback-spec/Map.prototype.getOrInsert.html" target="_blank">here.</a></p>
 
                         <!-- Embed original specification -->
                         <div class="iframe-container">
