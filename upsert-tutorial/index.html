@@ -238,98 +238,96 @@ To take your build for a test drive, run: |mach run|
 
                 <section class="collapsible" id="specification">
                     <h2>How to Read the ECMA-262 Language Specification</h2>
-                    <div class="content-body">
-                        <h3 id="1-what-is-the-ecma-262-specification">1. What is the ECMA-262 Specification?</h3>
-                        <ul>
-                            <li><a href="https://262.ecma-international.org/15.0/index.html?_gl=1*chzpt6*_ga*Mzc5OTUzMzY4LjE3MjQzMjMwMjA.*_ga_TDCK4DWEPP*MTczMDcyMzg1Ni41LjEuMTczMDcyNDYxMy4wLjAuMA" target="_blank">ECMA-262</a> is the official document that defines how JavaScript™ works. It provides detailed guidelines for developers and browser vendors on how JavaScript™ should behave in every situation, ensuring consistency and compatibility across different platforms and implementations.</li>
-                        </ul>
-                        <h3 id="2-how-to-navigate-the-document">2. How to Navigate the Document</h3>
-                        <ul>
-                            <li><strong>Start with the Table of Contents</strong>: This is where you’ll find major sections like grammar, types, and functions. It helps you jump to the part you’re interested in.</li>
-                            <li><strong>Use Search</strong>: The specification is large. If you’re looking for a specific topic, like <code>Promise</code> or <code>Array</code>, use your browser’s search function (<code>Ctrl + F</code>/<code>cmd + F</code>) to find it quickly.</li>
-                            <li><strong>Annexes (Extras)</strong>: At the end of the document, you’ll find extra sections that explain older features or give additional context.</li>
-                        </ul>
-                        <h3 id="3-how-to-read-the-algorithms">3. How to Read the Algorithms</h3>
-                        <ul>
-                            <li><strong>Algorithms are like instructions</strong>: The spec breaks down how JavaScript™ works using step-by-step instructions, almost like a recipe.</li>
-                            <li><strong>Steps to follow</strong>: The specification breaks down methods like <a href="https://262.ecma-international.org/15.0/index.html?_gl=1*chzpt6*_ga*Mzc5OTUzMzY4LjE3MjQzMjMwMjA.*_ga_TDCK4DWEPP*MTczMDcyMzg1Ni41LjEuMTczMDcyNDYxMy4wLjAuMA#sec-array.prototype.push" target="_blank"><code>Array.prototype.push</code></a> into clear, numbered steps. For instance, it describes how the method first checks the current <code>length</code>, then adds the new element, and finally updates the array&#39;s <code>length</code>.</li>
-                            <li><strong>Conditions</strong>: You’ll often see <code>if</code>-statements, that will tell you how to proceed if the statement evaluates to <code>true</code> or <code>false</code>.</li>
-                        </ul>
-                        <h3 id="4-some-key-symbols-and-what-they-mean">4. Some Key Symbols and What They Mean</h3>
-                        <ul>
-                            <li><strong><code>[[ ]]</code> (Double Square Brackets)</strong>: These represent internal properties of JavaScript™ objects. These are properties that JavaScript™ uses internally but developers can’t directly access.</li>
-                            <li><strong><code>?</code> (Question Mark)</strong>: This shorthand means &quot;if this operation results in an error (abrupt completion), <code>return</code> that error immediately.&quot; For example, <code>? Call(func, arg)</code> means that if calling <code>func</code> with <code>arg</code> throws an error, stop the current process and <code>return</code> the error right away.</li>
-                            <li><strong><code>Return</code></strong>: This marks the end of an operation, specifying the result to be returned.</li>
-                            <li><strong><code>{ }</code> (Curly braces)</strong>: These are used to define a <strong>Record</strong> structure. A <strong>Record</strong> is a data structure that groups together related fields as <code>key-value</code> pairs. Each field is identified by a name (<code>key</code>) and stores a specific <code>value</code>. </li>
-                            <li><strong>Keywords</strong>: Keywords like <code>If</code>, <code>Else</code>, or <code>Else if</code> are represented as <strong>algorithmic steps</strong> in plain text, rather than in code syntax, to describe the behavior that an implementation should follow.</li>
-                        </ul>
-                        <h3 id="5-finding-information-on-other-symbols">5. Finding Information on Other Symbols</h3>
-                        <p>The specification text uses a range of notations and symbols to describe its syntax and structure. To understand these symbols, you can look into this specific section in the specification:</p>
-                        <ul>
-                            <li><a href="https://262.ecma-international.org/15.0/index.html?_gl=1*chzpt6*_ga*Mzc5OTUzMzY4LjE3MjQzMjMwMjA.*_ga_TDCK4DWEPP*MTczMDcyMzg1Ni41LjEuMTczMDcyNDYxMy4wLjAuMA#sec-notational-conventions" target="_blank">Notational Conventions</a>: This section explains the different types of symbols, and how they are used to define the language. </li>
-                            <li>For example, in the <a href="https://262.ecma-international.org/15.0/index.html?_gl=1*chzpt6*_ga*Mzc5OTUzMzY4LjE3MjQzMjMwMjA.*_ga_TDCK4DWEPP*MTczMDcyMzg1Ni41LjEuMTczMDcyNDYxMy4wLjAuMA#sec-nonterminal-symbols-and-productions" target="_blank">Nonterminal Symbols and Productions</a> section, you can read about nonterminal symbol, which are shown in <em>italic type</em>, and learn how to read the syntactic definition of a <strong>WhileStatement</strong>.</li>
-                        </ul>
-                        <h3 id="6-start-simple">6. Start Simple</h3>
-                        <ul>
-                            <li>Avoid diving into the complex parts right away. Start with sections like the <strong>Introduction</strong> or common JavaScript™ features, such as arrays and functions.</li>
-                            <li><strong>External Help</strong>: Use resources like <a href="https://searchfox.org/" target="_blank">SearchFox.org</a> to browse and search for JavaScript™ engine implementations or additional explanations before checking the more technical spec.</li>
-                            <li>You can also check out <a href="https://timothygu.me/es-howto/">https://timothygu.me/es-howto/</a> or <a href="https://v8.dev/blog/tags/understanding-ecmascript">https://v8.dev/blog/tags/understanding-ecmascript</a> for other helpful guides on how to read the ECMA-262 Language Specification.</li>
-                        </ul>
-                        <h3 id="7-example-understanding-arrayprototypepush">7. Example: Understanding <a href="https://262.ecma-international.org/15.0/index.html?_gl=1*chzpt6*_ga*Mzc5OTUzMzY4LjE3MjQzMjMwMjA.*_ga_TDCK4DWEPP*MTczMDcyMzg1Ni41LjEuMTczMDcyNDYxMy4wLjAuMA#sec-array.prototype.push" target="_blank"><code>Array.prototype.push</code></a></h3>
-                        <ul>
-                            <li>In the specification, you can search for <code>Array.prototype.push</code> to see how it works. The algorithm will explain:<ul>
-                                <li>First, the <code>length</code> of the array is checked.</li>
-                                <li>Then, the new element is added to the array.</li>
-                                <li>Finally, the <code>length</code> property is updated to reflect the added element.</li>
-                            </ul>
-                            </li>
-                        </ul>
-                        <h3 id="the-mapprototypeupsert-specification">The <code>Map.prototype.upsert</code> Specification</h3>
-                        <p>This is the specification of the <code>Map.prototype.upsert</code> which will be implemented in this tutorial. This specification will guide our implementation, detailing each operation the <code>upsert</code> method needs to perform to insert or update a <code>key-value</code> pair in a <code>Map</code> object.</p>
-                        <pre><code class="language-lua">1. Let M be the this value.
-  2. Perform ? RequireInternalSlot(M, [[MapData]]).
-  3. Let entries be the List that is M.[[MapData]].
-  4. For each Record { [[Key]], [[Value]] } e that is an element of entries, do
+
+                    <h3 id="1-what-is-the-ecma-262-specification">1. What is the ECMA-262 Specification?</h3>
+                    <ul>
+                    <li><a href="https://262.ecma-international.org/" target="_blank">ECMA-262</a> is the official document that defines the programming language ECMAScript® (also known as JavaScript™). It provides detailed guidelines for developers and browser vendors on how JavaScript™ should behave in every situation, ensuring consistency and compatibility across different platforms and implementations.</li>
+                    </ul>
+                    <h3 id="2-how-to-navigate-the-document">2. How to Navigate the Document</h3>
+                    <ul>
+                    <li><strong>Start with the <em>Table of Contents</em></strong>: This is where you’ll find major sections describing the language&#39;s grammar and constructs, data types, standard library functions, and so on. It helps you jump to the part you’re interested in.</li>
+                    <li><strong>Use <em>Search</em></strong>: The specification is a large document. If you’re looking for a specific topic, like <code>Promise</code> or <code>Array</code>, use your browser’s search function (<code>Ctrl + F</code>/<code>cmd + F</code>) to find it quickly.</li>
+                    <li><strong>Annexes (Extras)</strong>: At the end of the document, you’ll find extra sections that explain older features or give additional context.</li>
+                    </ul>
+                    <h3 id="3-how-to-read-the-algorithms">3. How to Read the Algorithms</h3>
+                    <ul>
+                    <li><strong>Algorithms are like instructions</strong>: The specification breaks down how JavaScript™ works using <a href="https://262.ecma-international.org/#sec-algorithm-conventions">step-by-step instructions</a>, almost like a recipe.</li>
+                    <li><strong>Steps to follow</strong>: The specification breaks down methods like <a href="https://262.ecma-international.org/15.0/index.html#sec-array.prototype.push" target="_blank"><code>Array.prototype.push</code></a> into clear, numbered steps. For instance, it describes how the method first checks the current <code>length</code>, then adds the new element, and finally updates the array&#39;s <code>length</code>.</li>
+                    <li><strong>Conditionals and other control flow constructs</strong>: You’ll often see <code>if</code>-statements, that will tell you how to proceed if the statement evaluates to <code>true</code> or <code>false</code>.</li>
+                    </ul>
+                    <h3 id="4-some-key-symbols-and-what-they-mean">4. Some Key Symbols and What They Mean</h3>
+                    <ul>
+                    <li><strong><code>[[ ]]</code> (Double Square Brackets)</strong>: These represent <a href="https://262.ecma-international.org/#sec-object-internal-methods-and-internal-slots">internal properties of JavaScript™ objects</a>. These are properties that JavaScript™ uses internally but developers can’t directly access.</li>
+                    <li><strong><code>?</code> (Question Mark)</strong>: This <a href="https://262.ecma-international.org/#sec-returnifabrupt-shorthands">shorthand</a> means &quot;if this operation results in an error (abrupt completion), <code>return</code> that error immediately.&quot; For example, <code>? Call(func, arg)</code> means that if calling <code>func</code> with <code>arg</code> throws an error, stop the current process and <code>return</code> the error right away.</li>
+                    <li><strong><code>Return</code></strong>: This marks the end of an operation, specifying the result to be returned.</li>
+                    <li><strong><code>« »</code> (Guillemets)</strong>: These are used to define <a href="https://tc39.es/ecma262/#sec-list-and-record-specification-type" target="_blank">lists</a> in the specification text. A <strong>List</strong> is an ordered sequence of values, similar to a JavaScript™ array, but used only internally in the specification to represent collections of elements.</li>
+                    <li><strong><code>{ }</code> (Curly braces)</strong>: These are used to define a <a href="https://262.ecma-international.org/#sec-list-and-record-specification-type"><strong>Record</strong></a> structure. A <strong>Record</strong> is a data structure that groups together related fields as <code>key-value</code> pairs. Each field is identified by a name (<code>key</code>) and stores a specific <code>value</code>. These <strong>Record</strong> structures are specification-level entities.</li>
+                    <li><strong>Keywords in Algorithm Specifications</strong>: Keywords like <code>If</code>, <code>Else</code>, or <code>Else if</code> are represented as <strong>algorithmic steps</strong> in plain text, rather than in code syntax, to describe the behavior that an implementation should follow.</li>
+                    </ul>
+                    <h3 id="5-finding-information-on-other-symbols">5. Finding Information on Other Symbols</h3>
+                    <p>The specification text uses a range of notations and symbols to describe its syntax and structure. To understand these symbols, you can look into section <a href="https://262.ecma-international.org/15.0/index.html#sec-notational-conventions" target="_blank">Notational Conventions</a>. This section explains different types of symbols, and how they are used to define the language. </p>
+                    <p>For example, in section <a href="https://262.ecma-international.org/15.0/index.html#sec-nonterminal-symbols-and-productions" target="_blank">Nonterminal Symbols and Productions</a>, you can read about nonterminal symbols, which are shown in <em>italic font</em>, and learn how to read syntactic definition of a <strong><code>WhileStatement</code></strong> or an <strong><code>ArgumentList</code></strong>. </p>
+                    <h3 id="6-start-simple">6. Start Simple</h3>
+                    <ul>
+                    <li>Avoid diving into the complex parts right away.</li>
+                    <li>Proceed with sections that describe common JavaScript™ features, such as <a href="https://262.ecma-international.org/15.0/index.html#sec-array-objects">arrays</a> and <a href="https://262.ecma-international.org/15.0/index.html#sec-function-objects">function objects</a>.</li>
+                    <li><strong>External Help</strong>: Use resources like <a href="https://searchfox.org/" target="_blank">Searchfox.org</a> to browse and search for JavaScript™ engine implementations or additional explanations before checking the more technical spec.</li>
+                    <li>You can also check out <a href="https://timothygu.me/es-howto/"><em>&quot;How to Read the ECMAScript Specification&quot;</em></a> or <a href="https://v8.dev/blog/tags/understanding-ecmascript"><em>&quot;Understanding ECMAScript&quot;</em></a>: these are helpful guides on how to read the ECMA-262 Language Specification.</li>
+                    </ul>
+                    <h3 id="7-example-understanding-arrayprototypepush">7. Example: Understanding <a href="https://262.ecma-international.org/15.0/index.html#sec-array.prototype.push" target="_blank"><code>Array.prototype.push</code></a></h3>
+                    <p>In the specification, you can search for <code>Array.prototype.push</code> to see how it works. The algorithm will explain that:</p>
+                    <ul>
+                    <li>first, the <code>length</code> of the array is checked</li>
+                    <li>then, the new element is added to the array</li>
+                    <li>finally, the <code>length</code> property is updated to reflect the added element.</li>
+                    </ul>
+                    <h2 id="the-mapprototypeupsert-specification">The <code>Map.prototype.upsert</code> Specification</h2>
+                    <p>This is the specification of the <code>Map.prototype.upsert</code> which will be implemented in this tutorial. This specification will guide our implementation, detailing each operation the <code>upsert</code> method needs to perform to insert or update a <code>key-value</code> pair in a <code>Map</code> object.</p>
+                    <pre><code class="language-lua">
+1. Let M be the this value.
+2. Perform ? RequireInternalSlot(M, [[MapData]]).
+3. Let entries be the List that is M.[[MapData]].
+4. For each Record { [[Key]], [[Value]] } e that is an element of entries, do
     4a. If e.[[Key]] is not empty and SameValueZero(e.[[Key]], key) is true, return e.[[Value]].
-      4ai. If HasProperty(handler, &quot;update&quot;) is `true`, then
+    4ai. If HasProperty(handler, &quot;update&quot;) is `true`, then
         4ai1. Let updateFn be ? Get(handler, &quot;update&quot;).
         4ai2. Let updated be ? Call(updateFn, handler, « e.[[Value]], key, M »).
         4ai3. Set e.[[Value]] to updated.
-      4aii. Return e.[[Value]].
-  5. Let insertFn be ? Get(handler, &quot;insert&quot;).
-  6. Let inserted be ? Call(insertFn, handler, « e.[[Value]], key, M »).
-  7. Set e.[[Value]] to inserted.
-  8. Return e.[[Value]].
-</code></pre>
+    4aii. Return e.[[Value]].
+5. Let insertFn be ? Get(handler, &quot;insert&quot;).
+6. Let inserted be ? Call(insertFn, handler, « e.[[Value]], key, M »).
+7. Set e.[[Value]] to inserted.
+8. Return e.[[Value]].
+                    </code></pre>
+                    <p class="centered-paragraph">  An html version of the specification can be found <a href="initial-emplace-spec/Map.prototype.emplace.html" target="_blank">here.</a></p>
 
-                        <p class="centered-paragraph">An html version of the specification can be found <a href="https://bldl.github.io/upsert-tutorial/initial-emplace-spec/Map.prototype.emplace.html" target="_blank">here.</a></p>
-                        
-                        <!-- Embed original specification -->
-                        <div class="iframe-container">
-                            <div class="iframe-title">Original Specification</div>
-                            <iframe src="https://bldl.github.io/upsert-tutorial/initial-emplace-spec/Map.prototype.emplace.html" loading="lazy"></iframe>
-                        </div>
+                    <!-- Embed original specification -->
+                    <!-- <div class="iframe-container">
+                        <div class="iframe-title">New Specification</div>
+                        <iframe src="initial-emplace-spec/Map.prototype.emplace.html" loading="lazy"></iframe>
+                    </div> error freezes when scrolled-->
 
-                        <p>The ECMAScript 262 specification text can look intimidating at first glance. Before starting the implementation, try to get a rough understanding of what each line in the spec means. Write pseudocode, sentences or a combination.
-                            The aim is to develop a clear understanding of the functionality we want to achieve.</p>
+                    <p>The ECMA-262 Specification text can look intimidating at first glance. Before starting the implementation, try to get a rough understanding of what each line in the specification means. Write pseudocode, natural language sentences or a combination of them, for yourself to understand what is actually going on. 
+                    The aim is to develop a clear understanding of the functionality we want to achieve.</p>
+                    <p><strong>Key Points to Focus On:</strong></p>
+                    <ul>
+                    <li><strong>Scope and Validation:</strong> The first few lines establish the <code>this value</code> (<code>M</code>) and ensure it’s a valid instance of <code>Map</code>.</li>
+                    <li><strong>Iterating Over Entries:</strong> The method iterates through the <code>Map</code> entries to check if the specified <code>key</code> already exists.</li>
+                    <li><strong>Conditional Update or Insert:</strong> If the key exists, it checks for an <code>update</code> function in the <code>handler</code> and applies it to update the <code>value</code>. If the key does not exist, it uses the <code>insert</code> function to create a new entry.</li>
+                    <li><strong>Returning the Result:</strong> Finally, it returns the updated or inserted <code>value</code>.</li>
+                    </ul>
+                    <p>By breaking down the specification in this way, you&#39;ll have a roadmap for implementing each part of the <code>upsert</code> method. This approach will help make the implementation process smoother and ensure that you understand how each step contributes to the overall functionality.</p>
+                    <p><strong>Rewrite the Specification in Your Own Words</strong></p>
+                    <p>Example: </p>
+                    <ol start="3">
+                    <li>Let <strong>entries</strong> be the <code>List</code> that is <strong>M</strong>.[[MapData]].</li>
+                    </ol>
+                    <p>Could be rewritten to:</p>
+                    <ol start="3">
+                    <li>Make a <code>List</code> variable <strong>entries</strong>, which stores pairs <code>(key, value)</code>.</li>
+                    </ol>
+                    <p>In the implementation part of this tutorial, each line of the specification will be explained.</p>
 
-
-                        <p><strong>Key Points to Focus On:</strong></p>
-                        <ul>
-                            <li><strong>Scope and Validation:</strong> The first few lines establish the <code>this value</code> (<code>M</code>) and ensure it’s a valid instance of <code>Map</code>.</li>
-                            <li><strong>Iterating Over Entries:</strong> The method iterates through the <code>Map</code> entries to check if the specified <code>key</code> already exists.</li>
-                            <li><strong>Conditional Update or Insert:</strong> If the key exists, it checks for an <code>update</code> function in the <code>handler</code> and applies it to update the <code>value</code>. If the key does not exist, it uses the <code>insert</code> function to create a new entry.</li>
-                            <li><strong>Returning the Result:</strong> Finally, it returns the updated or inserted <code>value</code>.</li>
-                        </ul>
-                        <p>By breaking down the specification in this way, you&#39;ll have a roadmap for implementing each part of the <code>upsert</code> method. This approach will help make the implementation process smoother and ensure that you understand how each step contributes to the overall functionality.</p>
-                        <p><strong>Rewrite the spec in your own words</strong></p>
-                        <p>Example:
-                            3. Let <strong>entries</strong> be the <code>List</code> that is <strong>M</strong>.[[MapData]].</p>
-                        <p>Could be rewritten to:
-                            3. make a <code>List</code> variable <strong>entries</strong>, which stores pairs <code>(key, value)</code></p>
-                        <p>In the implementation part of this tutorial, each line of the specification will be explained.</p>
-
-                    </div>
                 </section>
 
                 <section class="collapsible" id="searchfox">
