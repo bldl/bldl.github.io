@@ -1081,14 +1081,15 @@ static const JSFunctionSpec object_methods[] = {
                 </section>
 
                 <section class="collapsible" id="issues">
-                    <h2>Issues with the Original Proposal</h2>
-                    <div class="content-body">
-                        <p><p>The proposal we have dealt with so far introduced a flexible solution by allowing both an <code>update</code> and an <code>insert</code> function, which added unnecessary complexity to the usage of <code>upsert</code>. Flexibility is generally a good thing. However in the case of <code>Map.prototype.upsert</code>, the flexibility comes at the expense of simplicity and ease of use, which is very important for widespread adoption in programming languages.</p>
-                        <p>The process of checking if a <code>key</code> exists and then inserting it if not, is likely the primary, in-demand use case for this method. By following the steps of this proposal, the process became unnecessarily complicated. Most developers typically just need to insert a <code>value</code> if the given <code>key</code> is missing, rather than having to provide separate logic for both <code>insert</code> and <code>update</code>. </p>
-                        <p>In addition, the approach of the original proposal doesn&#39;t align well with common practices in other known programming languages. An example which offers a similar and simpler functionality is seen in Python and is called <a href="https://docs.python.org/2/library/stdtypes.html#dict.setdefault" target="_blank"><code>setdefault</code></a>. You can read more about this method in the next section of the tutorial.</p>
-                        <p>By making it overcomplicated and a feature that is not commonly found in other languages, the method is at risk at being underutilized. Reducing the scope to a more straightforward function makes it more intuitive and more likely to be used effectively. </p>
-                        </p>
-                    </div>
+                    <h2>Issues With the Original Proposal</h2>
+                    <p>The proposal we have implemented provides a flexible solution by allowing both an <code>update</code> and an <code>insert</code> function. While flexibility is generally a good thing, here it adds unnecessary complexity to the usage of <code>upsert</code>. In other words, flexibility comes here at the expense of simplicity and ease of use which are very important for widespread adoption in programming languages.</p>
+                    <p>The most likely primary, in-demand use case of the <code>upsert</code> method is when a developer wants to check whether a <code>key</code> exists and, if it doesn&#39;t, to insert it into the map.
+                    That is, most developers typically would just need to insert a <code>value</code> if the given <code>key</code> is missing - rather than providing separate logic for both <code>insert</code> and <code>update</code>. 
+                    We can argue that the proposal design in its current form unnecessarily complicates the use of the <code>upsert</code> method for a majority of developers.</p>
+                    <p>Moreover, the current design doesn&#39;t align well with common practices in other major programming languages.
+                    An example with a similar - and simpler - functionality is the <a href="https://docs.python.org/2/library/stdtypes.html#dict.setdefault" target="_blank"><code>setdefault</code></a> method on dictionaries in Python. 
+                    Again, we can argue that being an overcomplicated feature not commonly found in other languages, the <code>upsert</code> method is at risk of being underutilized.
+                    Reducing the scope of the proposal, so that it has a more straightforward behaviour, would make it more intuitive and more likely to be used effectively by JavaScript™ developers.</p>
                 </section>
 
                 <section class="collapsible" id="new-proposal">
