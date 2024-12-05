@@ -88,86 +88,99 @@
 
                 <!-- Collapsible Sections for Detailed Topics -->
                 <section class="collapsible" id="proposal-overview">
-                    <h2>The Map.prototype.upsert Proposal</h2>
-                    <div class="content-body">
-                        <p><strong>What is it?</strong></p>
-                        <p>   <code>Map.prototype.upsert</code> is a new method for JavaScript™&#39;s <code>Map</code>-object. The operation simplifies the process of inserting or updating <code>key-value</code> pairs in the Map. The function simply checks for existence of a key to either <code>insert</code> or <code>update</code> new <code>key-value</code> pairs.</p>
-                        <p>   <strong>How does it work?</strong>
-                            The <code>upsert</code> operation takes two arguments: a <code>key</code> and a <code>handler</code> object. The <code>handler</code> contains two properties:</p>
-                        <ul>
-                            <li><p><code>update</code>: Function to modify <code>value</code> of a <code>key</code> if already present in the <code>Map</code>.</p>
-                            </li>
-                            <li><p><code>insert</code>: Function that generates a <code>default-value</code> to be set to the belonging <code>value</code> of the checked <code>key</code>.</p>
-                                <p> <strong>The function follow these steps:</strong></p>
-                                <ol>
-                                    <li>The <code>Map</code> is checked for the <code>key</code> passed as argument. If found:<ul>
-                                        <li>It checks the <code>handler</code> for an <code>update</code> function. If found, this is used to <code>update</code> the <code>value</code> belonging to the passed <code>key</code>. After this, the newly updated entry will be returned.</li>
-                                    </ul>
-                                    </li>
-                                    <li>If not found, the <code>insert</code> function from the <code>handler</code> is used to generate a new <code>value</code>. This will be assigned to the given <code>key</code> before returning it.</li>
-                                    <li>In either case, the <code>value</code> will be the <code>return value</code> of the <code>upsert</code> method.</li>
-                                </ol>
-                                <p> <strong>What is the motivation?</strong> Adding and updating values of a <code>Map</code> are tasks that developers often perform in conjunction. There are currently no <code>Map</code> methods for either of those two things, let alone a method that does both. The workarounds involve multiple lookups and can be inconvenient for developers. It is also aiming to prevent code that might be confusing or lead to errors.</p>
-                                <details>
-                                    <summary>
-                                        Either update or insert for a specific key
-                                    </summary>
+                    <summary><h2>The `Map.prototype.upsert` proposal</h2></summary>
+                    <p><strong>What is it?</strong></p>
+                    <p><code>Map.prototype.upsert</code> is a new method for <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map"><code>Map</code>-object</a> in JavaScript™. The operation simplifies the process of inserting or updating key-value pairs in the <code>Map</code>: it checks for existence of a key and then either <code>insert</code>s or <code>update</code>s a key-value pair.  </p>
+                    <p>This proposal is also intended for <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap"><code>WeakMap</code></a>, which shares a similar API structure. The behavior of <code>upsert</code> in <code>WeakMap</code> would follow the same principles, with the primary difference being the behavior of keys in <code>WeakMap</code>, as they are held weakly and can be garbage collected when no other references to them exist. In this tutorial however, we will focus on the <code>Map</code>-implementation.</p>
+                    <p><strong>How does it work?</strong>
+                    The <code>upsert</code> operation takes two arguments: a <code>key</code> and a <code>handler</code> object. The <code>handler</code> contains two properties:</p>
+                    <ul>
+                        <li><p><code>update</code>: A function to modify <code>value</code> of a <code>key</code> if it is already present in the <code>Map</code>.</p>
+                        </li>
+                        <li><p><code>insert</code>: A function that generates a <code>default-value</code> to be set to the belonging <code>value</code> of the checked <code>key</code>.</p>
+                        <p> <strong>The function <code>upsert</code> operates following these steps:</strong></p>
+                        <ol>
+                        <li>The <code>Map</code> is checked for the <code>key</code> passed as argument. If found:<ul>
+                        <li>It checks the <code>handler</code> for an <code>update</code> function. If found, this is used to <code>update</code> the <code>value</code> belonging to the passed <code>key</code>. After this, the newly updated entry will be returned.</li>
+                        </ul>
+                        </li>
+                        <li>If not found, the <code>insert</code> function from the <code>handler</code> is used to generate a new <code>value</code>. This will be assigned to the given <code>key</code> before returning it.</li>
+                        <li>In either case, the <code>value</code> will be the return value of the <code>upsert</code> method.</li>
+                        </ol>
+                        <p> <strong>What is the motivation?</strong> Adding and updating values of a <code>Map</code> are oftentimes performed in conjunction. Currently, there are no <code>Map</code> methods for either of these two actions - let alone a method that would do both. Usual workarounds involve multiple lookups and can be inconvenient for developers, and lead to confusing and error-prone code. Introducing a new method <code>upsert</code> shall resolve these drawbacks.</p>
+                        </li>
+                    </ul>
+                    <h4 id="examples">Examples</h4>
+                    <details>
+                        <summary>
+                            Example: <i>Either updating or inserting for a specific key</i>
+                        </summary>
 
-                                    <p> Before:</p>
-                                    <pre><code class="language-js">// two lookups
+                        <ul>
+                            <li>Without using the <code>upsert</code> function:</li>
+                        </ul>
+                        <pre><code class="language-js">// two lookups
 old = map.get(key);
 if (!old) {
-  map.set(key, value);
+    map.set(key, value);
 } else {
-  map.set(key, updated);
+    map.set(key, updated);
 }
-</code></pre>
-                                    <p> Using upsert:</p>
-                                    <pre><code class="language-js">map.upsert(key, {
+                        </code></pre>
+                        <ul>
+                            <li>Using the <code>upsert</code> function:</li>
+                        </ul>
+                        <pre><code class="language-js">map.upsert(key, {
   update: () =&gt; updated,
   insert: () =&gt; value
 });
-</code></pre>
-                                </details>
-                                <details>
-                                    <summary>
-                                        Just insert if missing:
-                                    </summary>
+                        </code></pre>
+                    </details>
+                    <details>
+                        <summary>
+                            Example: <i>Inserting if missing</i>
+                        </summary>
 
-                                    <p> Before:</p>
-                                    <pre><code class="language-js">// two lookups
+                        <ul>
+                            <li>Without using the <code>upsert</code> function:</li>
+                        </ul>
+                        <pre><code class="language-js">// two lookups
 if (!map1.has(key)) {
   map1.set(key, value);
 }
-</code></pre>
-                                    <p> Using upsert:</p>
-                                    <pre><code class="language-js">map.upsert(key, {
+                        </code></pre>
+                        <ul>
+                            <li>Using the <code>upsert</code> function:</li>
+                        </ul>
+                        <pre><code class="language-js">map.upsert(key, {
   insert: () =&gt; value
 });
-</code></pre>
-                                </details>
-                                <details>
-                                    <summary>
-                                        Just update if present:
-                                    </summary>
+                        </code></pre>
+                    </details>
+                    <details>
+                        <summary>
+                            Example: <i>Updating if present</i>
+                        </summary>
 
-                                    <p> Before:</p>
-                                    <pre><code class="language-js">// three lookups
+                        <ul>
+                            <li>Without using the <code>upsert</code> function:</li>
+                        </ul>
+                        <pre><code class="language-js">// three lookups
 if (map.has(key)) {
   old = map.get(key);
   updated = old.doThing();
   map.set(key, updated);
 }
-</code></pre>
-                                    <p> Using upsert:</p>
-                                    <pre><code class="language-js"> map.upsert(key, {
+                        </code></pre>
+                        <ul>
+                            <li>Using the <code>upsert</code> function:</li>
+                        </ul>
+                        <pre><code class="language-js"> 
+map.upsert(key, {
    update: (old) =&gt; old.doThing()
  });
-</code></pre>
-                                </details></li>
-                        </ul>
-
-                    </div>
+                        </code></pre>
+                    </details>
                 </section>
 
                 <section class="collapsible" id="installation">
