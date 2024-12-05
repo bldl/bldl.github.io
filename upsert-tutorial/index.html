@@ -64,8 +64,7 @@
                     <p>Project supervisors: <strong>Daniel Minor</strong> (Mozilla), <strong>Mikhail Barash</strong> (University of Bergen, Norway).
                     Project facilitators: <strong>Yulia Startsev</strong> (Mozilla), <strong>Mikhail Barash</strong> (University of Bergen, Norway).</p>
                     <p>This tutorial can be cited as:</p>
-                    <pre><code>L. Angeltveit, J. Haukenes, V. Larsen, S. Lianes, M. Ness, M. Barash. Implementing a JavaScript API proposal `Map.prototype.upsert` (a tutorial). 2024. 
-                    </code></pre>
+                    <pre><code>L. Angeltveit, J. Haukenes, V. Larsen, S. Lianes, M. Ness, M. Barash. Implementing a JavaScript API proposal `Map.prototype.upsert` (a tutorial). 2024. </code></pre>
                 </section>
 
 
@@ -121,16 +120,14 @@ if (!old) {
     map.set(key, value);
 } else {
     map.set(key, updated);
-}
-                        </code></pre>
+}</code></pre>
                         <ul>
                             <li>Using the <code>upsert</code> function:</li>
                         </ul>
                         <pre><code class="language-js">map.upsert(key, {
   update: () =&gt; updated,
   insert: () =&gt; value
-});
-                        </code></pre>
+});</code></pre>
                     </details>
                     <details>
                         <summary>
@@ -143,15 +140,13 @@ if (!old) {
                         <pre><code class="language-js">// two lookups
 if (!map1.has(key)) {
   map1.set(key, value);
-}
-                        </code></pre>
+}</code></pre>
                         <ul>
                             <li>Using the <code>upsert</code> function:</li>
                         </ul>
                         <pre><code class="language-js">map.upsert(key, {
   insert: () =&gt; value
-});
-                        </code></pre>
+});</code></pre>
                     </details>
                     <details>
                         <summary>
@@ -166,16 +161,13 @@ if (map.has(key)) {
   old = map.get(key);
   updated = old.doThing();
   map.set(key, updated);
-}
-                        </code></pre>
+}</code></pre>
                         <ul>
                             <li>Using the <code>upsert</code> function:</li>
                         </ul>
-                        <pre><code class="language-js"> 
-map.upsert(key, {
+                        <pre><code class="language-js">map.upsert(key, {
    update: (old) =&gt; old.doThing()
- });
-                        </code></pre>
+});</code></pre>
                     </details>
                 </section>
 
@@ -200,36 +192,28 @@ map.upsert(key, {
                     <p>After the installation is complete, a folder named <code>mozilla-unified</code> should appear in the folder where the terminal was located when you started step 1.</p>
                     <p>  Navigate into <code>mozilla-unified</code> folder using <code>cd mozilla_unified</code>.</p>
                     <p>  In order to run the SpiderMonkey engine, we first have to build it:</p>
-                    <pre><code class="language-sh">./mach build
-                    </code></pre>
+                    <pre><code class="language-sh">./mach build</code></pre>
                     <p>  After executing this command, the output should look something like this:</p>
                     <pre><code class="language-sh">Your build was successful!
-                    To take your build for a test drive, run: |mach run|
-                    </code></pre>
+To take your build for a test drive, run: |mach run|</code></pre>
                     <p>  In order to run the finished build, execute this command:</p>
-                    <pre><code class="language-sh">./mach run
-                    </code></pre>
+                    <pre><code class="language-sh">./mach run</code></pre>
                     <p>  Your terminal should now enter the JavaScript™ <a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">Read-Eval-Print-Loop</a> mode. 
                     The functionality is similar to a browser console. You can execute arbitrary JavaScript™ code. </p>
-                    <pre><code class="language-sh">js&gt;
-                    </code></pre>
+                    <pre><code class="language-sh">js&gt;</code></pre>
                     <p>  This will be used to test our implementation throughout the tutorial.</p>
                     <p>  You can use it to write js-lines to evaluate. This will output <code>Hello World!</code> in the console:</p>
-                    <pre><code class="language-sh">js&gt; console.log(&quot;Hello World!&quot;);
-                    </code></pre>
+                    <pre><code class="language-sh">js&gt; console.log(&quot;Hello World!&quot;);</code></pre>
                     <p>  You can also execute <code>.js</code> files - this is done by passing the filename as a parameter in the <code>./mach run</code> command: </p>
-                    <pre><code class="language-sh">./mach run helloworld.js
-                    </code></pre>
+                    <pre><code class="language-sh">./mach run helloworld.js</code></pre>
                     <h3 id="3-applying-simple-changes">3. Applying simple changes</h3>
                     <p>  Self-hosted code is located in <a href="https://hg.mozilla.org/mozilla-unified/file/tip/js/src/builtin"><code>mozilla-unified/js/src/builtin</code></a>.</p>
                     <p>  In the local copy, we can edit, add or remove functions. As an example, we demonstrate how we can change the return value of a function. Open file <a href="https://hg.mozilla.org/mozilla-unified/file/tip/js/src/builtin/Array.js"><code>Array.js</code></a> and change function <a href="https://hg.mozilla.org/mozilla-unified/file/tip/js/src/builtin/Array.js#l1168"><code>ArrayAt</code></a> to always <a href="https://hg.mozilla.org/mozilla-unified/file/tip/js/src/builtin/Array.js#l1192">return</a> the value <code>42</code>. We can now test this change by rebuilding and running the SpiderMonkey and then calling the function with some valid parameters, as shown below:</p>
-                    <pre><code class="language-sh">  
-./mach build
+                    <pre><code class="language-sh">./mach build
 ./mach run
 js&gt; var myArray = [1, 2, 3];
 js&gt; myArray.at(1);
-42
-                    </code></pre>
+42</code></pre>
                     <p>  Self-hosted code is a somewhat different from ordinary JavaScript™, given that you can effectively and easily edit/create functions you want.
                     This can cause problems in certain situations - we will discuss more on this later.</p>
 
@@ -282,8 +266,7 @@ js&gt; myArray.at(1);
                     </ul>
                     <h2 id="the-mapprototypeupsert-specification">The <code>Map.prototype.upsert</code> Specification</h2>
                     <p>This is the specification of the <code>Map.prototype.upsert</code> which will be implemented in this tutorial. This specification will guide our implementation, detailing each operation the <code>upsert</code> method needs to perform to insert or update a <code>key-value</code> pair in a <code>Map</code> object.</p>
-                    <pre><code class="language-lua">
-1. Let M be the this value.
+                    <pre><code class="language-lua">1. Let M be the this value.
 2. Perform ? RequireInternalSlot(M, [[MapData]]).
 3. Let entries be the List that is M.[[MapData]].
 4. For each Record { [[Key]], [[Value]] } e that is an element of entries, do
@@ -296,9 +279,9 @@ js&gt; myArray.at(1);
 5. Let insertFn be ? Get(handler, &quot;insert&quot;).
 6. Let inserted be ? Call(insertFn, handler, « e.[[Value]], key, M »).
 7. Set e.[[Value]] to inserted.
-8. Return e.[[Value]].
-                    </code></pre>
+8. Return e.[[Value]].</code></pre>
                     <p class="centered-paragraph">  An html version of the specification can be found <a href="initial-emplace-spec/Map.prototype.emplace.html" target="_blank">here.</a></p>
+
 
                     <!-- Embed original specification -->
                     <!-- <div class="iframe-container">
@@ -330,18 +313,18 @@ js&gt; myArray.at(1);
                 </section>
 
                 <section class="collapsible" id="searchfox">
-                    <h2>Using Searchfox</h2>
-                    <div class="content-body">
-                        <p>  <a href="https://searchfox.org/" target="_blank">Searchfox</a> is a helpful tool. Searchfox provides an indexed view of the source code, allowing developers to efficiently search for specific files, functions, or keywords. For instance, you can trace the implementation of existing JavaScript™ features, see how certain functions interact with SpiderMonkey’s internal data structures, or find how built-in JavaScript™ objects like <code>Map</code> are handled. SearchFox helps you navigate a seemingly endless and confusing codebase.</p>
-                        <p>  When Implementing the <code>upsert</code> proposal, you will find that looking at existing implementations of similar functionality is often a good starting point. Combine the ECMA-262 Specification with Searchfox and look at existing code.</p>
-                        <p>  Example workflow:</p>
-                        <ol>
-                            <li><em>Some line from the specification</em>.</li>
-                            <li>Find some other function with the same or similar spec line in the ECMA-262 specification.</li>
-                            <li>Look up the function in Searchfox.</li>
-                            <li>Borrow from the other function.</li>
-                        </ol>
-                    </div>
+                    <h2>Searchfox</h2>
+
+                    <p>  <a href="https://searchfox.org/" target="_blank">Searchfox</a> is a helpful tool. Searchfox provides an indexed view of the source code, allowing one to efficiently search for specific files, functions, or keywords. For instance, you can trace the implementation of existing JavaScript™ features, see how certain functions interact with SpiderMonkey’s internal data structures, or find how built-in JavaScript™ objects like <code>Map</code> are handled. Searchfox helps you navigate a seemingly endless and confusing codebase.</p>
+                    <p>When implementing the <code>upsert</code> proposal, you will find that looking at existing implementations of similar functionality is often a good starting point. Combine the ECMA-262 Specification with Searchfox and look at existing code.</p>
+                    <p>  Example of workflow when trying to implement a line of the specification:</p>
+                    <ol>
+                        <li><em>Some line from the specification</em>.</li>
+                        <li>Find some other function with the same or similar specificatin line in the ECMA-262 Specification.</li>
+                        <li>Look up that other function in Searchfox.</li>
+                        <li>Borrow code from that other function&#39;s implementation.</li>
+                    </ol>
+
                 </section>
 
                 <section class="collapsible" id="implementation">
