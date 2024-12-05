@@ -1163,23 +1163,23 @@ prefs.setdefault(&quot;useDarkmode&quot;, True)
                 <section class="collapsible" id="implementing-new-proposal">
                     <h2>Implementing the New Proposal</h2>
                     <div class="content-body">
-                        <p>In this section, we will adapt our implementation to match the updated proposal specification. Fortunately, some of the logic from the previous implementation can be reused. Our goal here is to keep the code clean and efficient by making only the necessary adjustments.</p>
-                        <h3 id="step-1-4---the-logic-remains-the-same">Step 1 to 4  -  The logic remains the same</h3>
+                        <p>  We will now adapt our existing implementation of the original <code>upsert</code> proposal to match the updated specification.
+                            As we can see, some of the logic from the previous implementation can be reused.
+                            Our goal here is to make the necessary adjustments to the original implementation.</p>
+                        <h3 id="step-1-4---the-logic-remains-the-same">Step 1 to 4 - The logic remains the same</h3>
                         <p>  The first four steps remain unchanged from the original proposal.</p>
-                        <p>  <strong>The Specification States:</strong></p>
-                        <pre><code>1. Let M be the this value.
+                        <pre><code class="language-lua">1. Let M be the this value.
 2. Perform ? RequireInternalSlot(M, [[MapData]]).
 3. Let entries be the List that is M.[[MapData]].
 4. For each Record { [[Key]], [[Value]] } e that is an element of entries, do
 </code></pre>
-                        <p>  These lines are similar to the previous proposal specification and they remain seemingly unchanged. Only a few altercations are introduced. We need to update the argument <code>handler</code> to <code>value</code>.</p>
-                        <details>
-                            <summary>Solution</summary>
-
-                            <pre><code class="language-js">
+                        <p>  The only modification we make is that the <code>handler</code> of <code>MapUpsert</code> is now named <code>value</code>.</p>
+                        <pre><code class="language-js">
 function MapUpsert(key, value) {
+  // 1. Let M be the this value.
   var M = this;
 
+  // 2. Perform ? RequireInternalSlot(M, [[MapData]]).
   if (!IsObject(M) || (M = GuardToMapObject(M)) === null) {
     return callFunction(
       CallMapMethodIfWrapped,
@@ -1190,33 +1190,31 @@ function MapUpsert(key, value) {
     );
   }
 
+  // 3. Let entries be the List that is M.[[MapData]].
   var entries = callFunction(std_Map_entries, M);
 
+  // 4. For each Record { [[Key]], [[Value]] } e that is an element of entries, do
   for (var e of allowContentIter(entries)) {
     var eKey = e[0];
     var eValue = e[1];
-
-    //...
+    // ...
   }
 }
 </code></pre>
-                            <p>We are now ready to proceed and update the logic of the function.</p>
-                        </details>
-
+                        <p>We are now ready to proceed with the steps 4a, 5 and 6 of the updated specification.</p>
                         <h3 id="step-4a---if-the-key-exists-return-the-value">Step 4a - If the key exists, return the value</h3>
-                        <p>  In this step, we implement the condition to handle the case when the <code>key</code> already exists in the <code>Map</code>.</p>
-                        <p>  <strong>Specification Line:</strong></p>
-                        <pre><code>4a. If e.[[Key]] is not empty and SameValueZero(e.[[Key]], key) is true, return e.[[Value]].
+                        <p>  In this step, we implement the condition to handle the case when the <code>key</code> already exists in the <code>Map</code>:</p>
+                        <pre><code class="language-lua">4a. If e.[[Key]] is not empty and SameValueZero(e.[[Key]], key) is true, return e.[[Value]].
 </code></pre>
-                        <p>In the updated logic, we are only concerned with returning the existing <code>value</code> if the <code>key</code> is found, rather than handling updates. This is a streamlined approach that differs from our previous implementation.</p>
-                        <p>Use the built-in <code>std_Map_get</code> function to <code>return</code> the existing <code>value</code>.</p>
-                        <details>
-                            <summary>Solution</summary>
-
-                            <pre><code class="language-js">
+                        <p>In this updated logic, we are only concerned with returning the existing <code>value</code> if the <code>key</code> is found, rather than handling updates.
+                            This is a streamlined approach that differs from our previous implementation.
+                            We use the built-in <code>std_Map_get</code> function to return the existing <code>value</code>:</p>
+                        <pre><code class="language-js">
 function MapUpsert(key, value) {
+  // 1. Let M be the this value.
   var M = this;
 
+  // 2. Perform ? RequireInternalSlot(M, [[MapData]]).
   if (!IsObject(M) || (M = GuardToMapObject(M)) === null) {
     return callFunction(
       CallMapMethodIfWrapped,
@@ -1227,34 +1225,37 @@ function MapUpsert(key, value) {
     );
   }
 
+  // 3. Let entries be the List that is M.[[MapData]].
   var entries = callFunction(std_Map_entries, M);
 
+  // 4. For each Record { [[Key]], [[Value]] } e that is an element of entries, do
   for (var e of allowContentIter(entries)) {
     var eKey = e[0];
     var eValue = e[1];
 
+    // 4a. If e.[[Key]] is not empty and SameValueZero(e.[[Key]], key) is true, return e.[[Value]].
     if (SameValueZero(eKey, key)) {
       return callFunction(std_Map_get, M, key);
     }
   }
+
+  // ...
 }
 </code></pre>
-                            <p>With this code in place, our <code>MapUpsert</code> function will <code>return</code> the existing <code>value</code> if the <code>key</code> is found in the <code>Map</code>. If the <code>key</code> does not exist, the function will continue to the next steps, where we will handle inserting a new entry.</p>
-                        </details>
-
-                        <h3 id="step-5--6---insert-the-new-key-value-pair">Step 5 &amp; 6 - Insert the new key value pair</h3>
-                        <p>  Now, we address the scenario where the <code>key</code> does not already exist in the <code>Map</code>. If the specified <code>key</code> is not found in the previous iteration step, <code>insert</code> the new <code>value</code> and <code>return</code> it.</p>
-                        <p>  <strong>The Specification States:</strong></p>
-                        <pre><code>5. Set e.[[Value]] to value.
+                        <p>Now the <code>MapUpsert</code> function will return the existing <code>value</code> if the <code>key</code> is found in the <code>Map</code>.
+                            If the <code>key</code> does not exist, the function will continue to the next steps which will handle inserting a new entry.</p>
+                        <h3 id="step-5-and-6---insert-the-new-key-value-pair">Step 5 and 6 - Insert the new key-value pair</h3>
+                        <p>  Now, we address the scenario where the <code>key</code> does not already exist in the <code>Map</code>. If the specified <code>key</code> is not found in the previous iteration step, <code>insert</code> the new <code>value</code> and return it:</p>
+                        <pre><code class="language-lua">5. Set e.[[Value]] to value.
 6. Return e.[[Value]].
 </code></pre>
-                        <p>  In this case, we will add the new <code>key</code>-<code>value</code> pair to the <code>Map</code> and then <code>return</code> the <code>value</code>. We can achieve this by using the built-in <code>Map::set</code> method, which allows us to add entries directly and efficiently.</p>
-                        <details>
-                            <summary>Solution</summary>
-
-                            <pre><code class="language-js">function MapUpsert(key, value) {
+                        <p>  We add the new <code>key</code>-<code>value</code> pair to the <code>Map</code> and then <code>return</code> the <code>value</code>.
+                            This can be achieved by using the built-in <code>Map::set</code> method, which allows us to add entries directly and efficiently.</p>
+                        <pre><code class="language-js">function MapUpsert(key, value) {
+  // 1. Let M be the this value.
   var M = this;
 
+  // 2. Perform ? RequireInternalSlot(M, [[MapData]]).
   if (!IsObject(M) || (M = GuardToMapObject(M)) === null) {
     return callFunction(
       CallMapMethodIfWrapped,
@@ -1265,25 +1266,29 @@ function MapUpsert(key, value) {
     );
   }
 
+  // 3. Let entries be the List that is M.[[MapData]].
   var entries = callFunction(std_Map_entries, M);
 
+  // 4. For each Record { [[Key]], [[Value]] } e that is an element of entries, do
   for (var e of allowContentIter(entries)) {
     var eKey = e[0];
     var eValue = e[1];
 
+    // 4a. If e.[[Key]] is not empty and SameValueZero(e.[[Key]], key) is true, return e.[[Value]].
     if (SameValueZero(eKey, key)) {
       return callFunction(std_Map_get, M, key);
     }
   }
 
+  // 5. Set e.[[Value]] to value.
   callFunction(std_Map_set, M, key, value);
 
+  // 6. Return e.[[Value]].
   return value;
 }
 </code></pre>
-                        </details>
-
-                        <p>With these fairly simple steps our new implementation is now more streamlined with a simpler and more attractive API.</p>
+                        <p>With these fairly simple steps our new implementation becomes simpler, and provides a more compelling API.
+                        </p>
 
                     </div>
                 </section>
