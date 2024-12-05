@@ -43,47 +43,43 @@
                 <!-- ECMAScript® Section (non-collapsible) -->
                 <section id="ecmascript">
                     <h2>ECMAScript®</h2>
-                    <p>
-                        JavaScript™ is standardized by ECMAScript® and specified in the 
-                        <a href="https://ecma-international.org/publications-and-standards/standards/ecma-262/" target="_blank">
-                            ECMA-262 language specification
-                        </a>, 
-                        which is maintained by Ecma International through the 
-                        <a href="https://tc39.es/" target="_blank">TC39 committee</a>. 
-                        ECMAScript® defines the core features of the language, providing a standard that ensures consistency across different JavaScript™ engines. 
-                        Major engines like 
-                        <a href="https://v8.dev/" target="_blank">V8</a> (used in Chrome and Node.js), 
-                        <a href="https://developer.apple.com/documentation/javascriptcore" target="_blank">JavaScriptCore</a> (Safari), 
-                        and 
-                        <a href="https://spidermonkey.dev/" target="_blank">SpiderMonkey</a> (Firefox) 
-                        implement these specifications, allowing developers to write code that behaves similarly across different environments.
-                    </p>
-                    <p>
-                        SpiderMonkey, the engine developed by Mozilla, powers JavaScript™ execution in Firefox and supports the development of new language features. 
-                        This tutorial focuses on working within SpiderMonkey to implement and test a new JavaScript™ proposal, providing insight into both the ECMAScript® 
-                        standardization process and the inner workings of a JavaScript™ engine.
-                    </p>
+                    <p>JavaScript™ is standardized by ECMAScript® and specified in the <a href="https://ecma-international.org/publications-and-standards/standards/ecma-262/" target="_blank">ECMA-262 language specification</a>, which is maintained by Ecma International&#39;s <a href="https://tc39.es/" target="_blank">TC39 committee</a>. ECMAScript® defines the core features of the language, providing a standard that ensures consistency across different JavaScript™ engines. Major engines like <a href="https://v8.dev/" target="_blank">V8</a> (used in Chrome and Node.js), <a href="https://developer.apple.com/documentation/javascriptcore" target="_blank">JavaScriptCore</a> (Safari), and <a href="https://spidermonkey.dev/" target="_blank">SpiderMonkey</a> (Firefox) implement these specifications, allowing developers to write code that behaves similarly across different environments.</p>
+                    <p><a href="https://spidermonkey.dev/">SpiderMonkey</a>, the engine developed by Mozilla, powers JavaScript™ execution in <a href="https://www.mozilla.org/en-US/firefox/">Firefox</a> and supports development of new language features. This tutorial focuses on working within SpiderMonkey to implement and test an ECMAScript® proposal, providing insight into both the ECMAScript® standardization process and the inner workings of a JavaScript™ browser engine.</p>
+
                 </section>
 
                 <!-- Introduction Section (non-collapsible) -->
                 <section id="introduction">
                     <h2>Introduction</h2>
-                    <p>Welcome to this detailed tutorial on how to implement and understand the Map.prototype.upsert proposal. This guide is tailored to help both beginners and advanced developers learn how to contribute to JavaScript™ language development by implementing a new feature in SpiderMonkey, Mozilla's JavaScript™ engine. We’ll cover all the necessary steps, from downloading and setting up the development environment to writing the upsert method and testing it with the official test suite, Test262.</p>
-                    <p>We'll start with an introduction to <code>Map.prototype.upsert</code> proposal, highlighting its benefits for developers. From there, you'll be guided through setting up the development environment using Mozilla's SpiderMonkey JavaScript™ engine. You'll then implement the <code>upsert</code> method using both <i>self-hosted</i> JavaScript™ and (a little bit of) C++, ensuring alignment with the ECMAScript® specification.</p>
-                    <p>By the end of this tutorial, you'll have implemented a fully functional <code>upsert</code> method and gained valuable insight into the process of designing, testing, and standardizing JavaScript™ features.</p>
+                    <p>Welcome to this detailed tutorial on how to implement and understand the <a href="https://github.com/tc39/proposal-upsert" target="_blank"><code>Map.prototype.upsert</code></a> proposal. This tutorial is tailored to help both beginners and advanced developers learn how to contribute to JavaScript™ language development by implementing a new feature in SpiderMonkey - Mozilla&#39;s JavaScript™ engine. We will cover all the necessary steps, from downloading and setting up the development environment to specifying and implementing the <code>upsert</code> method and testing it with the official test suite, <a href="https://github.com/tc39/test262" target="_blank">Test262</a>.</p>
+                    <p>We&#39;ll start with an introduction to the <code>Map.prototype.upsert</code> proposal, highlighting its benefits for developers. From there, you&#39;ll be guided through setting up the development environment using the SpiderMonkey engine. You&#39;ll then implement the <code>upsert</code> method using both <a href="https://udn.realityripple.com/docs/Mozilla/Projects/SpiderMonkey/Internals/self-hosting"><em>self-hosted</em></a> JavaScript™ and (a little bit of) C++, ensuring alignment with the ECMAScript® specification. </p>
+                    <p>The main focus will initially be on developing a functional solution. Once basic functionality is working, optimization techniques will be applied to ensure your code is efficient and performant. You&#39;ll also gain insight into contributing to the ECMAScript® standard, aligning your code with the best practises in the JavaScript™ evolution. Finally, you&#39;ll explore testing with <a href="https://github.com/tc39/test262">Test262</a>, the official ECMAScript® test suite, learning how to write custom tests to validate your implementation.</p>
+                    <p>By the end of this tutorial, you&#39;ll have implemented a fully functional <code>upsert</code> method and gained an understanding into the process of designing, testing and standardizing JavaScript™ features.</p>
+
                 </section>
+
+                <section id="authors">
+                    <h3>Authors</h3>
+                    <p>This tutorial has been written and edited by: <strong>Lauritz Thoresen Angeltveit</strong>, <strong>Jonas Haukenes</strong>, <strong>Vetle Larsen</strong>, <strong>Sune Lianes</strong>, <strong>Mathias Hop Ness</strong>, and <strong>Mikhail Barash</strong>, and is a result of a project conducted at the University of Bergen (Norway) in collaboration with <strong>Daniel Minor</strong> (Mozilla) during August - November 2024.</p>
+                    <p>Project supervisors: <strong>Daniel Minor</strong> (Mozilla), <strong>Mikhail Barash</strong> (University of Bergen, Norway).
+                    Project facilitators: <strong>Yulia Startsev</strong> (Mozilla), <strong>Mikhail Barash</strong> (University of Bergen, Norway).</p>
+                    <p>This tutorial can be cited as:</p>
+                    <pre><code>L. Angeltveit, J. Haukenes, V. Larsen, S. Lianes, M. Ness, M. Barash. Implementing a JavaScript API proposal `Map.prototype.upsert` (a tutorial). 2024. 
+                    </code></pre>
+                </section>
+
 
                 <!-- What's Covered Section (non-collapsible) -->
                 <section id="whats-covered">
-                    <h2>What’s Covered in This Tutorial?</h2>
+                    <h2>What&#39;s Covered in This Tutorial?</h2>
                     <ul>
-                        <li><strong><code>Map.prototype.upsert</code> Proposal:</strong> Learn what this proposal is, how it works, and why it’s beneficial for JavaScript™ developers.</li>
-                        <li><strong>Up the Development Environment:</strong> How to download and build Mozilla Unified, the repository that contains SpiderMonkey.</li>
-                        <li><strong>Implementing the Proposal:</strong> Implementing the upsert method in self-hosted JavaScript™ and C++.</li>
-                        <li><strong>Debugging and Testing:</strong> How to test your implementation using Test262 and run custom scripts.</li>
-                        <li><strong>Optimizing Your Code:</strong> Learn about performance considerations and optimizations.</li>
-                        <li><strong>Contributing to the ECMAScript® Standard:</strong> Understand how to write specification-compliant code and contribute to ECMAScript®.</li>
-                    </ul>
+                        <li><strong>The <code>Map.prototype.upsert</code> Proposal:</strong> Learn what <a href="https://github.com/tc39/proposal-upsert">this proposal</a> is, how it works, and why it’s beneficial for JavaScript™ developers.</li>
+                        <li><strong>Setting up the development environment:</strong> How to download and build <a href="https://hg.mozilla.org/mozilla-unified/"><em>Mozilla Unified</em></a>, the repository that contains SpiderMonkey.</li>
+                        <li><strong>Implementing the proposal:</strong> We will implement the <code>upsert</code> method both in <a href="https://udn.realityripple.com/docs/Mozilla/Projects/SpiderMonkey/Internals/self-hosting">self-hosted</a> JavaScript™ and C++.</li>
+                        <li><strong>Debugging and testing:</strong> How to test your implementation using <a href="https://github.com/tc39/test262">Test262</a>, the official test suite for ECMAScript®, and how to run custom scripts.</li>
+                        <li><strong>Optimizing the code:</strong> Learn about performance considerations and optimizations.</li>
+                        <li><strong>Contributing to the ECMAScript® Specification:</strong> Understand how to write <a href="https://tc39.es/proposal-upsert/">specification</a>-compliant code and contribute to the broader <a href="https://262.ecma-international.org/">ECMAScript® standard</a>.</li>
+                    </ul>      
                 </section>
 
                 <!-- Collapsible Sections for Detailed Topics -->
