@@ -171,8 +171,7 @@ if (map.has(key)) {
                         <ul>
                             <li>Using the <code>upsert</code> function:</li>
                         </ul>
-                        <pre><code class="language-js"> 
-map.upsert(key, {
+                        <pre><code class="language-js">map.upsert(key, {
    update: (old) =&gt; old.doThing()
  });
                         </code></pre>
@@ -223,8 +222,7 @@ map.upsert(key, {
                     <h3 id="3-applying-simple-changes">3. Applying simple changes</h3>
                     <p>  Self-hosted code is located in <a href="https://hg.mozilla.org/mozilla-unified/file/tip/js/src/builtin"><code>mozilla-unified/js/src/builtin</code></a>.</p>
                     <p>  In the local copy, we can edit, add or remove functions. As an example, we demonstrate how we can change the return value of a function. Open file <a href="https://hg.mozilla.org/mozilla-unified/file/tip/js/src/builtin/Array.js"><code>Array.js</code></a> and change function <a href="https://hg.mozilla.org/mozilla-unified/file/tip/js/src/builtin/Array.js#l1168"><code>ArrayAt</code></a> to always <a href="https://hg.mozilla.org/mozilla-unified/file/tip/js/src/builtin/Array.js#l1192">return</a> the value <code>42</code>. We can now test this change by rebuilding and running the SpiderMonkey and then calling the function with some valid parameters, as shown below:</p>
-                    <pre><code class="language-sh">  
-./mach build
+                    <pre><code class="language-sh">./mach build
 ./mach run
 js&gt; var myArray = [1, 2, 3];
 js&gt; myArray.at(1);
