@@ -122,6 +122,7 @@ pre {
     overflow-x: auto; /* Horizontal scroll for long lines */
     font-family: Consolas, "Courier New", monospace; /* Monospace font */
     font-size: 0.9em; /* Slightly smaller font size for a code look */
+    margin: 10px 10px 15px;
 }
 
 /* Tab Container Styles */
