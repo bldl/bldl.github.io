@@ -172,59 +172,58 @@ if (map.has(key)) {
 
                 <section class="collapsible" id="installation">
                     <h2>Installing Mozilla Unified</h2>
-                    <div class="content-body">
-                        <p> In this section you will learn how to download the Mozilla environment based on your operating system. It will also feature setting up SpiderMonkey for development and introduce main tools which are used during development.</p>
-                        <h3 id="1-installation-of-spidermonkey-and-required-tools">1. Installation of SpiderMonkey and required tools</h3>
-                        <p>  We will start by installing SpiderMonkey and all required tools.</p>
-                        <p>  Before you start installing, open a terminal and navigate to the desired location of the <code>mozilla_unified</code> folder.</p>
-                        <p>  The installation process depends on your operating system, therefore you can click on the link under that matches yours.</p>
-                        <ul>
-                            <li><a href="https://firefox-source-docs.mozilla.org/setup/linux_build.html" target="_blank">Build Mozilla Firefox on Linux</a></li>
-                            <li><a href="https://firefox-source-docs.mozilla.org/setup/macos_build.html" target="_blank">Build Mozilla Firefox on Mac</a></li>
-                            <li><a href="https://firefox-source-docs.mozilla.org/setup/windows_build.html" target="_blank">Build Mozilla Firefox on Windows</a></li>
-                        </ul>
-                        <p>During the installation, you will be asked which version of Firefox you want to build as a standard. In this tutorial we will choose <code>5: SpiderMonkey JavaScript™ engine</code>, which will allow for faster builds during development.</p>
-                        <p>It doesn&#39;t matter if you choose to use <code>hg</code> or <code>git</code> to grab the source code.</p>
-                        <p><strong>Having trouble?</strong></p>
-                        <p><a href="https://firefox-source-docs.mozilla.org/setup/common_build_errors.html" target="_blank">Here</a> are some of the most common build errors. <strong>Note!</strong> Many errors can be related to your Python build. Ensure you are using the correct python path and/or configuration.</p>
-                        <h3 id="2-running-spidermonkey">2. Running SpiderMonkey</h3>
-                        <p>After the installation is complete, a folder named <code>mozilla-unified</code> should appear in the folder where your terminal was located when you started the guide above.</p>
-                        <p>  Navigate into <code>mozilla-unified</code> folder using <code>cd mozilla_unified</code>.</p>
-                        <p>  In order to run the SpiderMonkey engine, we first have to build it:</p>
-                        <pre><code class="language-sh">./mach build
-</code></pre>
-                        <p>  After executing this command the output should look something like this:</p>
-                        <pre><code class="language-sh">Your build was successful!
-To take your build for a test drive, run: |mach run|
-</code></pre>
-                        <p>  In order to run the finished build, execute this command:</p>
-                        <pre><code class="language-sh">./mach run
-</code></pre>
-                        <p>  Your terminal should now enter the JavaScript™ Read-Eval-Print-Loop mode.
-                            The functionality is similar to a browsers console and arbitrary JavaScript™ code can be executed. </p>
-                        <pre><code class="language-sh">js&gt;
-</code></pre>
-                        <p>  This will be used to test our implementation throughout the tutorial.</p>
-                        <p>  You can use it to write js-lines to evaluate. This will output <code>Hello World!</code> in the console:</p>
-                        <pre><code class="language-sh">js&gt; console.log(&quot;Hello World!&quot;);
-</code></pre>
-                        <p>  You can also execute <code>.js</code> files, which is done by giving the filename as a parameter in the <code>./mach run</code> command: </p>
-                        <p>  If you create a file called <code>helloworld.js</code> with <code>console.log(&quot;Hello World!);</code> in it and save it. You can execute it like this (given it is in the same folder):</p>
-                        <pre><code class="language-sh">./mach run helloworld.js
-</code></pre>
-                        <h3 id="3-applying-simple-changes">3. Applying simple changes</h3>
-                        <p>  Self-hosted code is located in <code>mozilla-unified/js/src/builtin</code>. Here we can edit, add or remove functions.</p>
-                        <p>  To see the effect of this, we can change the <code>return value</code> of a function.</p>
-                        <p>  Open file <code>Array.js</code> and change function <code>ArrayAt</code> to <code>return</code> 42.</p>
-                        <p>  Test your changes by rebuilding and running the SpiderMonkey and then call the function with valid parameters.</p>
-                        <pre><code class="language-sh">  js&gt; var l = [1,2,3];
-  js&gt; l.at(1);
-  42
-</code></pre>
-                        <p>  Self-hosted code is a bit different to normal JavaScript™, given that you can effectively and easily edit/create functions you want.
-                            This can cause problems, more on this later.</p>
 
-                    </div>
+                    <p>   In this section you will learn how to download the Mozilla environment for your operating system. It will also feature setting up SpiderMonkey for development and introduce main tools which are used during development.</p>
+                    <h3 id="1-installation-of-spidermonkey-and-required-tools">1. Installation of SpiderMonkey and required tools</h3>
+                    <p>  We will start by installing SpiderMonkey and all the required tools.</p>
+                    <p>  Before you start installing, open a terminal and navigate to the desired location of the <code>mozilla_unified</code> folder.</p>
+                    <p>  The installation process depends on your operating system - please use the link below that matches yours.</p>
+                    <ul>
+                    <li><a href="https://firefox-source-docs.mozilla.org/setup/linux_build.html" target="_blank">Build Mozilla Firefox on Linux</a></li>
+                    <li><a href="https://firefox-source-docs.mozilla.org/setup/macos_build.html" target="_blank">Build Mozilla Firefox on Mac</a></li>
+                    <li><a href="https://firefox-source-docs.mozilla.org/setup/windows_build.html" target="_blank">Build Mozilla Firefox on Windows</a></li>
+                    </ul>
+                    <p>During the installation, you will be asked which version of Firefox you want to build as a standard. In this tutorial we will choose <code>5: SpiderMonkey JavaScript™ engine</code>, which will allow for faster builds during development.</p>
+                    <p>It doesn&#39;t matter if you choose to use <a href="https://en.wikipedia.org/wiki/Mercurial"><code>hg</code></a> or <a href="https://en.wikipedia.org/wiki/Git"><code>git</code></a> to grab the source code.</p>
+                    <p><strong>Troubleshooting</strong></p>
+                    <p><a href="https://firefox-source-docs.mozilla.org/setup/common_build_errors.html" target="_blank">Here</a> are some of the most common build errors. <strong>Note!</strong> Many errors can be related to your Python build. Ensure you are using the correct Python path and/or configuration.</p>
+                    <h3 id="2-running-spidermonkey">2. Running SpiderMonkey</h3>
+                    <p>After the installation is complete, a folder named <code>mozilla-unified</code> should appear in the folder where the terminal was located when you started step 1.</p>
+                    <p>  Navigate into <code>mozilla-unified</code> folder using <code>cd mozilla_unified</code>.</p>
+                    <p>  In order to run the SpiderMonkey engine, we first have to build it:</p>
+                    <pre><code class="language-sh">./mach build
+                    </code></pre>
+                    <p>  After executing this command, the output should look something like this:</p>
+                    <pre><code class="language-sh">Your build was successful!
+                    To take your build for a test drive, run: |mach run|
+                    </code></pre>
+                    <p>  In order to run the finished build, execute this command:</p>
+                    <pre><code class="language-sh">./mach run
+                    </code></pre>
+                    <p>  Your terminal should now enter the JavaScript™ <a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">Read-Eval-Print-Loop</a> mode. 
+                    The functionality is similar to a browser console. You can execute arbitrary JavaScript™ code. </p>
+                    <pre><code class="language-sh">js&gt;
+                    </code></pre>
+                    <p>  This will be used to test our implementation throughout the tutorial.</p>
+                    <p>  You can use it to write js-lines to evaluate. This will output <code>Hello World!</code> in the console:</p>
+                    <pre><code class="language-sh">js&gt; console.log(&quot;Hello World!&quot;);
+                    </code></pre>
+                    <p>  You can also execute <code>.js</code> files - this is done by passing the filename as a parameter in the <code>./mach run</code> command: </p>
+                    <pre><code class="language-sh">./mach run helloworld.js
+                    </code></pre>
+                    <h3 id="3-applying-simple-changes">3. Applying simple changes</h3>
+                    <p>  Self-hosted code is located in <a href="https://hg.mozilla.org/mozilla-unified/file/tip/js/src/builtin"><code>mozilla-unified/js/src/builtin</code></a>.</p>
+                    <p>  In the local copy, we can edit, add or remove functions. As an example, we demonstrate how we can change the return value of a function. Open file <a href="https://hg.mozilla.org/mozilla-unified/file/tip/js/src/builtin/Array.js"><code>Array.js</code></a> and change function <a href="https://hg.mozilla.org/mozilla-unified/file/tip/js/src/builtin/Array.js#l1168"><code>ArrayAt</code></a> to always <a href="https://hg.mozilla.org/mozilla-unified/file/tip/js/src/builtin/Array.js#l1192">return</a> the value <code>42</code>. We can now test this change by rebuilding and running the SpiderMonkey and then calling the function with some valid parameters, as shown below:</p>
+                    <pre><code class="language-sh">  
+./mach build
+./mach run
+js&gt; var myArray = [1, 2, 3];
+js&gt; myArray.at(1);
+42
+                    </code></pre>
+                    <p>  Self-hosted code is a somewhat different from ordinary JavaScript™, given that you can effectively and easily edit/create functions you want.
+                    This can cause problems in certain situations - we will discuss more on this later.</p>
+
                 </section>
 
                 <section class="collapsible" id="specification">
