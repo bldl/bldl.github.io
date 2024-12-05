@@ -84,7 +84,7 @@
 
                 <!-- Collapsible Sections for Detailed Topics -->
                 <section class="collapsible" id="proposal-overview">
-                    <summary><h2>The `Map.prototype.upsert` proposal</h2></summary>
+                    <h2>The `Map.prototype.upsert` proposal</h2>
                     <p><strong>What is it?</strong></p>
                     <p><code>Map.prototype.upsert</code> is a new method for <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map"><code>Map</code>-object</a> in JavaScript™. The operation simplifies the process of inserting or updating key-value pairs in the <code>Map</code>: it checks for existence of a key and then either <code>insert</code>s or <code>update</code>s a key-value pair.  </p>
                     <p>This proposal is also intended for <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap"><code>WeakMap</code></a>, which shares a similar API structure. The behavior of <code>upsert</code> in <code>WeakMap</code> would follow the same principles, with the primary difference being the behavior of keys in <code>WeakMap</code>, as they are held weakly and can be garbage collected when no other references to them exist. In this tutorial however, we will focus on the <code>Map</code>-implementation.</p>
@@ -942,7 +942,6 @@ static const JSFunctionSpec object_methods[] = {
                         <p>The process of checking if a <code>key</code> exists and then inserting it if not, is likely the primary, in-demand use case for this method. By following the steps of this proposal, the process became unnecessarily complicated. Most developers typically just need to insert a <code>value</code> if the given <code>key</code> is missing, rather than having to provide separate logic for both <code>insert</code> and <code>update</code>. </p>
                         <p>In addition, the approach of the original proposal doesn&#39;t align well with common practices in other known programming languages. An example which offers a similar and simpler functionality is seen in Python and is called <a href="https://docs.python.org/2/library/stdtypes.html#dict.setdefault" target="_blank"><code>setdefault</code></a>. You can read more about this method in the next section of the tutorial.</p>
                         <p>By making it overcomplicated and a feature that is not commonly found in other languages, the method is at risk at being underutilized. Reducing the scope to a more straightforward function makes it more intuitive and more likely to be used effectively. </p>
-                        </p>
                     </div>
                 </section>
 
@@ -1143,14 +1142,13 @@ function MapUpsert(key, value) {
                 </section>
 
                 <section class="collapsible" id="ecmarkup">
-                    <h2>Writing the Specification in Ecmarkup</h2>
+                    <h2>Rendering the New Specification Text Using _Ecmarkup_</h2>
                     <div class="content-body">
-                        <p>In this section, we will cover how to install and use Ecmarkup to write specifications for proposals.
-                            Ecmarkup is a markup language that is designed for technical specifications.
-                            This allows the authors to visualize and format complex algorithms, clauses and terms in a way that is both readable and structured.
-                            Regarding JavaScript-proposals, Ecmarkup provides a solid framework to document new algorithms or implementations so they align with the ECMAScript®-standards. </p>
-                        <p>  We will start with setting up the necessary tools to be able to use Ecmarkup, such as Node.js and Ecmarkup itself.
-                            Furthermore, we will check out how to format specification using Ecmarkup before guiding you through how to build your specification into an HTML document. </p>
+                        <p>In this section, we will explain how to use <a href="https://github.com/tc39/ecmarkup"><em>Ecmarkup</em></a>, which is a specialized markup language, to write and format <strong>specification documents</strong> for ECMAScript® and other web standards, so that they align with the formatting of these standards documents.
+                            <em>Ecmarkup</em> is specifically designed for technical specifications, and allows authors to visualize and format complex algorithms, clauses and terms in a way that is both readable and structured. If you visit the <a href="https://tc39.es/ecma262/" target="_blank">ECMA-262 official webpage</a>, you can read the ECMAScript® specification with hyperlinks to used terms, algorithms, and syntax definitions. This enables easy navigation between different sections and components of the specification. These specifications are made with <em>Ecmarkup</em>.</p>
+                        <p>We will explain how to install and use <em>Ecmarkup</em> to render proposal specifications, and will write our updated <code>upsert</code> proposal specification using <em>Ecmarkup</em>.
+                            We will start with setting up the necessary tools to be able to use <em>Ecmarkup</em>: Node.js and <em>Ecmarkup</em> itself. </p>
+
                         <ul>
                             <li><p><strong>Installing Node.js and Node Package Manager</strong></p>
                                 <div class="tab-container">
@@ -1161,27 +1159,27 @@ function MapUpsert(key, value) {
                                     </div>
                                     <div class="tab-content active" id="ecmarkup-windows-tab">
                                         <ol>
-                                            <li><p>First go to Node.js official website (<a href="https://nodejs.org/en">https://nodejs.org/en</a>), and download the Windows Installer (recommended version).</p>
+                                            <li><p>Download the Windows installer from the <a href="https://nodejs.org/en">Node.js webpage</a>.</p>
                                             </li>
-                                            <li><p>Run the installer and follow the instructions (make sure to check the box that says &quot;Automatically install necessary tools&quot;).</p>
+                                            <li><p>Run the installer and follow the instructions. Make sure to check the box that says <i>Automatically install necessary tools</i>.</p>
                                             </li>
-                                            <li><p>Verify installation by opening Command Prompt and typing:</p>
+                                            <li><p>Verify the installation by executing the following in the command prompt:</p>
                                             </li>
                                         </ol>
                                         <pre><code class="language-sh">node -v
 npm -v
 </code></pre>
-                                        <p>This should return the versions of Node.js and npm.</p>
+                                        <p>This should output the versions of Node.js and npm.</p>
                                     </div>
                                     <div class="tab-content" id="ecmarkup-mac-tab">
                                         <ol>
                                             <li>Open Terminal</li>
-                                            <li>Install Node.js via Homebrew by running the following command:</li>
+                                            <li>Install Node.js via <a href="https://brew.sh/">Homebrew</a> by running the following command:</li>
                                         </ol>
                                         <pre><code class="language-sh">brew install node
 </code></pre>
                                         <ol start="3">
-                                            <li>Verify installation by typing:</li>
+                                            <li>Verify installation by executing:</li>
                                         </ol>
                                         <pre><code class="language-sh">node -v
 npm -v
@@ -1190,12 +1188,12 @@ npm -v
                                     <div class="tab-content" id="ecmarkup-linux-tab">
                                         <ol>
                                             <li>Open Terminal</li>
-                                            <li>Update your package list:</li>
+                                            <li>Update the package list:</li>
                                         </ol>
                                         <pre><code class="language-sh">sudo apt update
 </code></pre>
                                         <ol start="3">
-                                            <li>Install Node.js by running:</li>
+                                            <li>Install Node.js by executing:</li>
                                         </ol>
                                         <pre><code class="language-sh">sudo apt install node.js spm
 </code></pre>
@@ -1211,23 +1209,24 @@ npm -v
                             </li>
                             <li><p><strong>Installing <a href="https://tc39.es/ecmarkup/" target="_blank">Ecmarkup</a></strong></p>
                                 <ul>
-                                    <li>Windows/Mac/Linux<ol>
-                                        <li>Open Command Prompt (Windows) or Terminal (Mac/Linux)</li>
-                                        <li>Run the following command to install Ecmarkup globally:</li>
+                                    <li><strong>Windows</strong> / <strong>Mac</strong> / <strong>Linux</strong><ol>
+                                        <li>Open Command Prompt (Windows) or Terminal (Mac/Linux).</li>
+                                        <li>Run the following command to install <em>Ecmarkup</em> globally:</li>
                                     </ol>
                                         <pre><code class="language-sh">npm install -g ecmarkup
 </code></pre>
                                         <ol start="3">
-                                            <li>Verify that Ecmarkup has been installed by typing:</li>
+                                            <li>Verify that <em>Ecmarkup</em> has been installed by executing:</li>
                                         </ol>
                                         <pre><code class="language-sh">ecmarkup --version
 </code></pre>
-                                        <p>You have now installed Ecmarkup.</p>
+                                        <p>You have now successfully installed <em>Ecmarkup</em>.</p>
                                     </li>
                                 </ul>
                             </li>
-                            <li><p><strong>How to write ecmarkup</strong></p>
-                                <p>Ecmarkup is a markup language used for writing technical specifications. It has a syntax similar to <code>HTML</code>, making it intuitive for those familiar with web development. Here&#39;s a simple example of what an algorithm in a <code>.emu</code> file looks like (<code>.emu</code> is the file ending of an ecmarkup file):</p>
+                            <li><p><strong>How to write specifications using Ecmarkup</strong></p>
+                                <p><em>Ecmarkup</em>&#39;s syntax is similar to HTML - this makes it intuitive for most web developers.
+                                    Files written using <em>Ecmakup</em> have extension <code>.emu</code>; here is a simple example of such a file.</p>
                                 <pre><code class="language-html">&lt;!DOCTYPE html&gt;
 &lt;meta charset=&quot;utf8&quot;&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css&quot;&gt;
@@ -1239,7 +1238,7 @@ contributors: Your name
 &lt;/pre&gt;
 
 &lt;emu-clause id=&quot;sec-greater-than-five&quot;&gt;
-  &lt;h1&gt;greaterThanFive(_value_)&lt;/h1&gt;
+  &lt;h1&gt;greaterThanFive (_value_)&lt;/h1&gt;
   &lt;p&gt;When the greaterThanFive method is called, the following steps are taken:&lt;/p&gt;
   &lt;emu-alg&gt;
     1. Let _x_ be _value_.
@@ -1252,28 +1251,48 @@ contributors: Your name
   &lt;/emu-alg&gt;
 &lt;/emu-clause&gt;
 </code></pre>
-                                <p><strong>Note:</strong> This is just an example of how an Ecmarkup file should be structured. The algorithm itself is illustrative and not a real-world example.</p>
+                                <p><a href="https://bldl.github.io/upsert-tutorial/greaterThanFiveExample-spec/out.html">Here</a> is how this document will look like when &quot;compiled&quot; to an HTML presentation.</p>
+                                <p>Please note that this is just an example of how an <em>Ecmarkup</em> file should be structured. The algorithm itself is illustrative and is not a real-world example.</p>
                             </li>
-                            <li><p><strong>How to format spec text using Ecmarkup</strong></p>
-                                <p>Formatting spec text using Ecmarkup involves understanding the differences between what each reperesents. ECMAScript® is a scripting language specification, while Ecmarkup is a specialized markup language used to write and format <strong>specification documents</strong> for ECMAScript® and other web standards.</p>
-                                <ol>
-                                    <li><p><strong>Understanding why we need Ecmarkup</strong></p>
-                                        <p>Ecmarkup combines HTML-like tags with specific syntactic constructs to write formal specifications. If you visit the <a href="https://tc39.es/ecma262/" target="_blank">TC39 official website</a> for ECMA-262, you can read ECMAScript® with hyperlinks to used terms, algorithms, and syntax definitions, allowing for easy navigation between different sections and components of the specification. These specifications are made with Ecmarkup.</p>
-                                    </li>
-                                    <li><p><strong>Basic translation steps</strong></p>
-                                        <ul>
-                                            <li><code>&lt;emu-alg&gt;</code>: Defines an algorithm.</li>
-                                            <li><code>&lt;emu-clause&gt;</code>: Defines a clause/section in the specification.</li>
-                                            <li>Underscores are used to refer to variables (<code>_varname_</code>).</li>
-                                            <li><code>&lt;emu-xref&gt;</code>: Link to other sections, clauses or algorithms within the specification.</li>
-                                            <li><code>*someBoldText*</code>: Make bold text with <code>*</code>.</li>
-                                            <li>Use double square brackets (<code>[[...]]</code>) when documenting or referring to the internal, hidden mechanisms of objects that are not directly accessible in the JavaScript™ language but are crucial for the implementation and behavior of the object.</li>
-                                        </ul>
-                                    </li>
-                                </ol>
+                            <li><p><strong>How to Format Specification Text Using <em>Ecmarkup</em></strong></p>
                             </li>
-                            <li><p>The function <code>upsert(key, callbackfn)</code> in ecmarkup (can also be found under the spec-folder in this proposal)</p>
-                                <pre><code class="language-html">  &lt;!DOCTYPE html&gt;
+                        </ul>
+                        <p><em>Ecmarkup</em> combines HTML-like tags with specific syntactic constructs to write formal specifications.</p>
+                        <table class="styled-table">
+                            <thead>
+                            <tr>
+                                <th><em>Ecmarkup tag/syntax</em></th>
+                                <th>explanation</th>
+                            </tr>
+                            </thead>
+                            <tbody><tr>
+                                <td><code>&lt;emu-alg&gt;</code></td>
+                                <td>defines an algorithm</td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;emu-clause&gt;</code></td>
+                                <td>defines a clause/section in the specification</td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;emu-xref&gt;</code></td>
+                                <td>adding a link to a section, clause or an algorithm within the specification</td>
+                            </tr>
+                            <tr>
+                                <td><code>[[ ... ]]</code> (<em>double square brackets</em>)</td>
+                                <td>when documenting or referring to the internal hidden mechanisms of objects that are not directly accessible in the JavaScript™ language but are crucial for the implementation and behavior of the object</td>
+                            </tr>
+                            <tr>
+                                <td><code>_varname_</code> (<em>underscores</em>)</td>
+                                <td>referring to variables within the specification</td>
+                            </tr>
+                            <tr>
+                                <td><code>*someBoldText*</code> (<em>asterisks</em>)</td>
+                                <td>renders text in bold font</td>
+                            </tr>
+                            </tbody></table>
+                        <p>The following is a demonstration of how we can write the new specification of the method <code>upsert(key, callbackfn)</code> using <em>Ecmarkup</em>. </p>
+                        <pre><code>```html
+  &lt;!DOCTYPE html&gt;
   &lt;meta charset=&quot;utf8&quot;&gt;
   &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css&quot;&gt;
   &lt;script src=&quot;./spec.js&quot;&gt;&lt;/script&gt;
@@ -1297,20 +1316,21 @@ contributors: Your name
       1. Return _e_.[[Value]].
     &lt;/emu-alg&gt;
   &lt;/emu-clause&gt;
+```
 </code></pre>
-                            </li>
-                            <li><p><strong>Building the spec</strong></p>
-                                <p>To build the spec, use the following command:</p>
-                                <pre><code class="language-sh">  ecmarkup spec.emu out.html
+                        <ul>
+                            <li><p><strong>Building the specification</strong></p>
+                                <p>After we have written a specification, we can build it to render as an HTML file:</p>
+                                <pre><code class="language-sh">node -e &#39;fs.mkdirSync(&quot;build&quot;, { recursive: true })&#39; &amp;&amp; ecmarkup --load-biblio @tc39/ecma262-biblio --verbose spec.emu build/out.html --lint-spec
 </code></pre>
                                 <p>In this command:</p>
                                 <ul>
-                                    <li><code>spec.emu</code> is the source file where you have written your specification using Ecmarkup.</li>
-                                    <li><code>out.html</code> is the output file, which is a runnable HTML document.
-                                        To verify that your specification has been built correctly, simply drag-and-drop the <code>out.html</code> file into a web browser.</li>
+                                    <li><code>spec.emu</code> is the source file where we have written our specification using <em>Ecmarkup</em>,</li>
+                                    <li><code>out.html</code> is the output file, which is an HTML document. To verify that our specification has been built correctly, we can open the <a href="https://bldl.github.io/upsert-tutorial/callbackfn-spec/specCallbackfn.html"><code>out.html</code></a> file in a web browser and visually inspect it.</li>
                                 </ul>
                             </li>
                         </ul>
+                        <p>Note that you can find the official <em>Ecmarkup</em> user guide <a href="https://tc39.es/ecmarkup/">here</a>.</p>
 
                     </div>
                 </section>
