@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html lang="en-us">
+ <head>
+  <meta charset=UTF-8>
+  <meta content="width=device-width" name="viewport">
+  <title>Involving Students and Academia in Web Platform Implementation</title>
+  <link rel="stylesheet" href="../Templates/slides.css">
+  <!-- To use the b6+ framework, include this: -->
+  <script src="../Templates/b6plus.js"></script>
+  <!-- To use the Shower framework, remove b6plus above and add these two: -->
+  <!-- <script src="../Templates/shower.js"></script>       -->
+  <!-- <script src="../Templates/iframe-fixup.js"></script> -->
+  <style>
+   .game td {border: thin solid; height: 1.2em}
+   .game {border: hidden; table-layout: fixed; border-collapse: collapse;
+     width: 5em; margin: 1em auto; text-align: center}
+  </style>
+ </head>
+ <body class="shower fade-in duration=15 hidemouse">
+
+
+  <div class=progress></div>
+
+  <div role=region aria-live=assertive>
+    Leaving slide mode.
+  </div>
+
+
+  <section class="slide cover clear" id="cover">
+   <h1>Involving Students and Academia in Web Platform Implementation</h1>
+   <address>Mikhail Barash (Univ. of Bergen, Norway)</address>
+   <p class=event>TPAC 2025<br>
+     Kobe, Japan &amp; online<br>
+     10–14 November 2025</p>
+  </section>
+  
+  <section class="slide" id="participation-rules">
+	  <h2>Participation Policies</h2>
+	  <ul>
+		  <li><a href="https://www.w3.org/Consortium/cepc/">Code of Ethics and Professional Conduct</a></li>
+		  <li><a href="https://www.w3.org/Consortium/Legal/2017/antitrust-guidance">Antitrust and Competition Guidance</a></li>
+	  </ul>
+	  <p/>
+	  <h2>IRC</h2>
+	  <ul>
+		  <li><code>#students-web</code></p>(<a href="https://webirc.w3.org/?channels=students-web"><tt>https://webirc.w3.org/?channels=students-web</tt></a>)</li>
+	  </ul>
+  </section>
+
+
+  <section class="slide" id="lists">
+   <h2>Agenda</h2>
+   <h3>Overview of collaboration between University of Bergen and TC39</h3>
+   <h3>Discussion</h3>
+   <h3>Summary &amp; Next Steps</h3>
+  </section>
+  
+  
+  <section class="slide">
+	  <h2>University of Bergen (UiB)</h2>
+	  <h3>Bergen Language Design Laboratory, Department of Informatics</h3>
+	  <ul>
+		  <li>25+ years of involvement in programming language standardization work</li>
+		  <li><b>C++:</b> lambdas, tuples, auto, decltype (<i>Jaakko Järvi</i>)</li>
+		  <li><b>Fortran:</b> generics (<i>Magne Haveraaen, Jaakko Järvi</i>)</li>
+		  <li><b>ECMAScript:</b> member of Ecma International since 2021</li>
+		  <li><b>WebAssembly:</b> recently joined the Community Group</li>
+	  </ul>
+	  ✅ We appreciate participation in <b>standards</b> and <b>open-source</b> work.
+  </section>
+  
+  <section class="slide">
+	  <h2>UiB: Implementation Work</h2>
+	  <h3>Project Course: specialized for a small group of 2&mdash;5 students, who are mentored by industry professionals over ~12 weeks</h3>
+	  
+      <div class="columns">
+       <section>
+	 	  <ul>
+	 		  <li><b>Array Grouping</b></li>
+	 		  <li><b>Upsert</b></li>
+	 		  <li><b>Joint Iteration</b></li>
+	 		  <li><b>Temporal</b></li>
+	 		  <li><b>Signals</b></li>
+	 	  </ul>
+       </section>
+       <section>
+        <h4>Thank you to the mentors!</h4>
+		<small>
+		<i>Aapo <b>Alasuutari</b>,
+		Eemeli <b>Aro</b>,
+		Shane F. <b>Carr</b>,
+		Luca <b>Casonato</b>,
+		Philip <b>Chimento</b>,
+		Ashley <b>Claymore</b>,
+		Daniel <b>Ehrenberg</b>,
+		Jonathan <b>Kuperman</b>,
+		Kevin <b>Ness</b>,
+		Daniel <b>Minor</b>,
+		Nicolò <b>Ribaudo</b>,
+		Justin <b>Ridgewell</b>,
+		Yulia <b>Startsev</b>,
+		Bryan <b>Thrall</b>,
+		Rich <b>Waldron</b></i>
+	</small>
+       </section>
+      </div>
+	  
+	  
+  </section>
+  
+  
+  <section class="slide side right big">
+   <h2>Elsewhere</h2>
+   <img class="side" width=498 height=575
+	src="pavel-book.jpg"
+	alt="[book by Pavel Panchekha]">
+	<p><b>Web Browser Engineering</b> (by <i>Pavel Panchekha &amp; Chris Harrelson</i>)</p>
+	<ul>
+		<li>University of Utah </li>
+		<li>University of Washington</li>
+		<li>HAW Hamburg</li>
+	</ul>
+	<h3>Learning objectives are different.</h3>
+  </section>
+  
+  
+  
+  <section class="slide">
+	  <h2>UiB: Skills Acquired</h2>
+	  <ul>
+		  <li>Deep <b>technical understanding</b> of fragments of non-trivial codebases</li>
+		  <li>Insight into collaborative and iterative nature of <b>PL design</b></li>
+		  <li>Teamwork, <b>coordination</b> in a distributed environment</li>
+		  <li>Professional <b>communication</b> (<i>JavaZone</i>, <i>Web Engines Hack Fest</i>, local meetups in Norway)</li>
+		  <li><b>Knowledge transfer</b></li>
+	  </ul>
+  </section>
+  
+  
+  
+  
+  <section class="slide">
+	  <h2>UiB: Contributions</h2>
+      <div class="columns">
+       <section>
+        <ul>
+			<li><b>Tests</b></li>
+			<li><b>Implementations</b> in engines</li>
+			<li>Tutorials &amp; talks</li>
+			<li>Co-authoring changes to a <b>proposal spec</b> using <code>ecmarkup</code></li>
+			<li>Co-authoring changes to a <b>proposal design</b></li>
+			<li>Scientific <b>research</b> on proposals</li>
+		</ul>
+       </section>
+       <section>
+        <h3>Still to explore</h3>
+        <ul>
+			<li><b>Reviewing</b> proposals/spec</li>
+			<li>Presenting at <b>committee meetings</b></li>
+			<li>Contributions to <b>non-API</b> proposals</li>
+			<li><b>Designing/authoring</b> a proposal</li>
+			<li>...</li>
+		</ul>
+       </section>
+      </div>
+	  
+  </section>
+  
+  
+  
+  
+  <section class="slide">
+	  <h2>UiB: Other Projects Around TC39</h2>
+	  <ul>
+		<li><i>TC39 Minutes Explorer</i></li>  
+		<li><i>Structural Search and Replace for showcasing syntactic proposals</i></li>
+		<li><i>Analysis of Process Documents</i></li>
+		<li><i>Categorization of TC39 proposals</i></li>
+		<li><i>Sources of feedback that TC39 uses</i></li>
+		<li>...</li>
+	  </ul>
+	  <h3>Most of these done under the auspices of TC39-TG5</h3>
+  </section>
+  
+  
+  
+  
+  <section class="slide">
+	  <h2>UiB: Scientific Research on TC39</h2>
+	  <ul>
+		  <li>Meta-tool for specifying design spaces (case study: <i><b>Records &amp; Tuples</b></i>)</li>
+		  <li>Rocq mechanization of a fragment of <i><b>Temporal</b></i> &rarr; <i><font color="#800000">found minor inconsistencies</font></i></li>
+		  <li>Rocq mechanization of <i><b>Signals</b></i> &rarr; <i><font color="#800000">establishing invariants</font></i></li>
+		  <li>Agda mechanization of <b>JS Modules semantics</b> &rarr; <i><font color="#800000">establishing invariants</font></i></li>
+		  <li>Language workbench for the ECMA-262 spec</li>
+		  <li>...</li>
+	  </ul>
+  </section>
+  
+  
+  
+  
+  <section class="slide">
+	  <h2>TC39-TG5</h2>
+	  <h3>Task Group on Experiments in Programming Language Standardization</h3>
+	  <ul>
+		  <li><b>Scope:</b> To provide a forum for the discussion, development and dissemination of research work on the standardization of ECMAScript and related technologies.</li>
+		  <li><code>https://github.com/tc39/tg5</code></li>
+	  </ul>
+	  <h3>TG5 &amp; UCSD</h3>
+	  <ul>
+		  <li><i>Evaluating usability and effectiveness of MessageFormat 2.0 through a think-aloud study with software engineers and translators</i></li>
+	  </ul>
+  </section>
+
+  <section class="slide">
+	  <h2>Discussion</h2>
+	  <ul>
+		  <li>How does one <b>connect</b> students with standards groups?</li>
+		  <li>How much <b>involvement</b> is needed from <b>mentors</b>, and how do we make that sustainable?</li>
+		  <li>What are the <b>incentives</b> for standards groups and universities to participate?</li>
+		  <li>What kind of <b>contributions</b> can we expect students to make, and how scalable this could be?</li>
+		  <li>What kind of <b>course structure</b> supports this kind of work?</li>
+	  </ul>
+  </section>
+  
+ 
+  <section class="slide">
+	  <h2>Summary &amp; Next Steps</h2>
+	  <h3>➡️ A document describing possible types of student contributions?</h3>
+  </section>
+
+  </body>
+</html>
+<!-- Local Variables: -->
+<!-- sgml-basic-offset: 1 -->
+<!-- End: -->
