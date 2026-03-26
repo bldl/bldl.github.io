@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <style>
+         body{
+			 margin:0;
+			 font-family:Arial;
+			 display:flex;
+			 /* height:100vh; */
+			 overflow-y: auto;
+			 height: 100vh;
+         }
+         #sidebar{
+			 width:max-content;
+			 min-width:200px;
+			 background:#f2f2f2;
+			 padding:5px;
+			 border-right:1px solid #ccc;
+			 overflow-y: auto;
+         }
+			 #sidebar a{
+			 display:block;
+			 padding:8px;
+			 text-decoration:none;
+			 color:black;
+         }
+         #sidebar a:hover{
+			 background:#ddd;
+         }
+         #content{
+			 flex:1;
+         }
+         iframe{
+			 width:100%;
+			 height:100%;
+			 border:none;
+         }
+      </style>
+   </head>
+   <body>
+      <div id="sidebar">
+      </div>
+      <div id="content">
+         <iframe name="viewer" src="./schemas/DurationConstructor.html"></iframe>
+      </div>
+   </body>
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script>
+      const Duration = [
+      "DurationAdd.html",
+      "DurationCompare.html",
+      "DurationConstructor.html",
+      "DurationFrom.html",
+      "DurationRound.html",
+      "DurationSubtract.html",
+      "DurationToLocaleString.html",
+      "DurationToString.html",
+      "DurationTotal.html",
+      "DurationWith.html",
+      	]
+      const Instant = [
+      "InstantAdd.html",
+      "InstantCompare.html",
+      "InstantConstructor.html",
+      "InstantEquals.html",
+      "InstantFromEpochMilliseconds.html",
+      "InstantFromEpochNanoseconds.html",
+      "InstantFrom.html",
+      "InstantRound.html",
+      "InstantSince.html",
+      "InstantSubtract.html",
+      "InstantToLocaleString.html",
+      "InstantToString.html",
+      "InstantToZonedDateTimeISO.html",
+      "InstantUntil.html",
+      	]
+      const Now = [
+      "NowPlainDateISO.html",
+      "NowPlainDateTimeISO.html",
+      "NowPlainTimeISO.html",
+      "NowZonedDateTimeISO.html",
+      ]
+      const PlainDate = [
+      "PlainDateAdd.html",
+      "PlainDateCompare.html",
+      "PlainDateConstructor.html",
+      "PlainDateEquals.html",
+      "PlainDateFrom.html",
+      "PlainDateSince.html",
+      "PlainDateSubtract.html",
+      "PlainDateToLocaleString.html",
+      "PlainDateToPlainDateTime.html",
+      "PlainDateToString.html",
+      "PlainDateToZonedDateTime.html",
+      "PlainDateUntil.html",
+      "PlainDateWithCalendar.html",
+      "PlainDateWith.html",
+      	]
+      const PlainDateTime = [
+      "PlainDateTimeAdd.html",
+      "PlainDateTimeCompare.html",
+      "PlainDateTimeConstructor.html",
+      "PlainDateTimeEquals.html",
+      "PlainDateTimeFrom.html",
+      "PlainDateTimeRound.html",
+      "PlainDateTimeSince.html",
+      "PlainDateTimeSubtract.html",
+      "PlainDateTimeToLocaleString.html",
+      "PlainDateTimeToString.html",
+      "PlainDateTimeToZonedDateTime.html",
+      "PlainDateTimeUntil.html",
+      "PlainDateTimeWithCalendar.html",
+      "PlainDateTimeWith.html",
+      "PlainDateTimeWithPlainTime.html",
+      	]
+      const PlainMonthDay = [
+      "PlainMonthDayConstructor.html",
+      "PlainMonthDayEquals.html",
+      "PlainMonthDayFrom.html",
+      "PlainMonthDayToLocaleString.html",
+      "PlainMonthDayToString.html",
+      "PlainMonthDayWith.html",
+      	]
+      const PlainTime = [
+      "PlainTimeAdd.html",
+      "PlainTimeCompare.html",
+      "PlainTimeConstructor.html",
+      "PlainTimeEquals.html",
+      "PlainTimeFrom.html",
+      "PlainTimeRound.html",
+      "PlainTimeSince.html",
+      "PlainTimeSubtract.html",
+      "PlainTimeToLocaleString.html",
+      "PlainTimeToString.html",
+      "PlainTimeUntil.html",
+      "PlainTimeWith.html",
+      	]
+      const PlainYearMonth = [
+      "PlainYearMonthAdd.html",
+      "PlainYearMonthCompare.html",
+      "PlainYearMonthConstructor.html",
+      "PlainYearMonthEquals.html",
+      "PlainYearMonthFrom.html",
+      "PlainYearMonthSince.html",
+      "PlainYearMonthSubtract.html",
+      "PlainYearMonthToLocaleString.html",
+      "PlainYearMonthToPlainDate.html",
+      "PlainYearMonthToString.html",
+      "PlainYearMonthUntil.html",
+      "PlainYearMonthWith.html",
+      	]
+      
+      const ZonedDateTime = [
+      "ZonedDateTimeAdd.html",
+      "ZonedDateTimeCompare.html",
+      "ZonedDateTimeConstructor.html",
+      "ZonedDateTimeEquals.html",
+      "ZonedDateTimeFrom.html",
+      "ZonedDateTimeGetTimeZoneTransition.html",
+      "ZonedDateTimeRound.html",
+      "ZonedDateTimeSince.html",
+      "ZonedDateTimeSubtract.html",
+      "ZonedDateTimeToLocaleString.html",
+      "ZonedDateTimeToString.html",
+      "ZonedDateTimeUntil.html",
+      "ZonedDateTimeWithCalendar.html",
+      "ZonedDateTimeWith.html",
+      "ZonedDateTimeWithPlainTime.html",
+      "ZonedDateTimeWithTimeZone.html",
+      ]
+      
+      const fileLists = {
+		"1_Now": Now, 
+		"2_PlainDate": PlainDate,
+		"3_PlainTime": PlainTime,
+		"4_PlainDateTime": PlainDateTime,
+		"5_ZonedDateTime": ZonedDateTime,
+		"6_Duration": Duration,
+		"7_Instant": Instant,
+		"8_PlainYearMonth": PlainYearMonth,
+		"9_PlainMonthDay": PlainMonthDay
+    }
+      
+	const sidebar = document.getElementById("sidebar");
+      
+	Object.entries(fileLists).forEach(([listName, files]) => {
+		const title = document.createElement("h3");
+		title.textContent = listName;
+		sidebar.appendChild(title);
+
+		const ul = document.createElement("ul");
+
+		files.forEach(file => {
+			const li = document.createElement("li");
+			const a = document.createElement("a");
+
+			a.href = "./schemas/" + file;
+			a.target = "viewer";
+			a.textContent = file;
+
+			li.appendChild(a);
+			ul.appendChild(li);
+		});
+		sidebar.appendChild(ul);
+	})
+	</script>
+</html>
